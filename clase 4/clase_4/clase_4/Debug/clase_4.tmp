@@ -1,0 +1,30 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega2560"</DEVICE>
+ <WORKING_DIR>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\Debug\clase_4.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>clase_4.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>clase_4.map</FILE>
+  <FILE>clase_4.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <ejer1><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>10</LINE></ejer1>
+  <r16_menor><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>37</LINE></r16_menor>
+  <r16_igual><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>52</LINE></r16_igual>
+  <end><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>65</LINE></end>
+ </LABELS>
+</ASSEMBLER_INFO>
