@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm Fri Aug 22 14:28:50 2025
+AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm Fri Aug 22 15:33:46 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -1359,7 +1359,7 @@ EQU  URXC3addr    0000006c
 EQU  UDRE3addr    0000006e
 EQU  UTXC3addr    00000070
 EQU  INT_VECTORS_SIZE 00000072
-CSEG ejer1        00000002
-CSEG r16_menor    00000019
-CSEG r16_igual    00000029
-CSEG end          00000038
+CSEG ejer1        00000000
+CSEG r16_menor    00000017
+CSEG r16_igual    00000027
+CSEG end          00000036

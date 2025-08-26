@@ -22,9 +22,9 @@
   <FILE>clase_4.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <ejer1><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>10</LINE></ejer1>
-  <r16_menor><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>37</LINE></r16_menor>
-  <r16_igual><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>52</LINE></r16_igual>
-  <end><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>65</LINE></end>
+  <ejer1><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>8</LINE></ejer1>
+  <r16_menor><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>35</LINE></r16_menor>
+  <r16_igual><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>50</LINE></r16_igual>
+  <end><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm</FILE><LINE>63</LINE></end>
  </LABELS>
 </ASSEMBLER_INFO>

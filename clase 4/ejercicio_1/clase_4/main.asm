@@ -5,8 +5,6 @@
 ; Author : Miguel
 ;
 
-jmp ejer1
-
 ejer1:
 
     lds r16, 0x0200       ; cargar valor de RAM[200H] en r16

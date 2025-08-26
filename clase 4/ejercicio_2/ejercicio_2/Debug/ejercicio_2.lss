@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\clase_4\clase_4\main.asm Fri Aug 22 14:28:50 2025
+AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_2\ejercicio_2\main.asm Fri Aug 22 15:37:38 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
@@ -1842,71 +1842,41 @@ AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Co
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-                                 ; clase_4.asm
+                                 ; ejercicio_2.asm
                                  ;
-                                 ; Created: 22/08/2025 2:18:05 p. m.
+                                 ; Created: 22/08/2025 3:35:47 p. m.
                                  ; Author : Miguel
                                  ;
                                  
-000000 940c 0002                 jmp ejer1
+                                 ejer2:
+000000 9100 0201                     lds r16, 0x0201       ; min
+000002 9110 0200                 	lds r17, 0x0200       ; valor
+000004 9120 0202                 	lds r18, 0x0202       ; max
                                  
-                                 ejer1:
+000006 1701                      	cp r16, r17
+000007 f008                      	brlo min_menor_valor
                                  
-000002 9100 0200                     lds r16, 0x0200       ; cargar valor de RAM[200H] en r16
-000004 9110 0201                     lds r17, 0x0201       ; cargar valor de RAM[201H] en r17
+000008 c007                      	rjmp valor_fuera_rango
                                  
-000006 1701                          cp  r16, r17          ; comparar r16 y r17, si r16<r17 --> C = 1
-000007 f088                          brlo r16_menor   ; brlo se habilita cuando C = 1
+                                 min_menor_valor:
                                  
-                                     ; si no saltó, puede ser igual o mayor
+000009 1712                      	cp r17, r18
+00000a f008                      	brlo valor_en_rango
                                  
-000008 f101                      	breq r16_igual		  ; salta si Z = 1
+00000b c004                      	rjmp valor_fuera_rango
                                  
-                                     ; si no saltó, es porque es mayor
-000009 e43d                      	ldi r19, 'M'
-00000a e441                      	ldi r20, 'A'
-00000b e559                      	ldi r21, 'Y'
-00000c e46f                      	ldi r22, 'O'
-00000d e572                      	ldi r23, 'R'
+                                 valor_en_rango:
+00000c ef3f                      	ldi r19, 0xff
+00000d 9330 0203                 	sts 0x0203, r19
+00000f c004                      	rjmp end
                                  
-00000e 9330 0202                 	sts 0x0202, r19
-000010 9340 0203                 	sts 0x0203, r20
-000012 9350 0204                 	sts 0x0204, r21
-000014 9360 0205                 	sts 0x0205, r22
-000016 9370 0206                 	sts 0x0206, r23
-                                 
-000018 c01f                          rjmp end              ; ir al final
-                                 
-                                 r16_menor:
-000019 e43d                          ldi r19, 'M'
-00001a e445                      	ldi r20, 'E'
-00001b e45e                      	ldi r21, 'N'
-00001c e46f                      	ldi r22, 'O'
-00001d e572                      	ldi r23, 'R'
-                                 
-00001e 9330 0202                 	sts 0x0202, r19
-000020 9340 0203                 	sts 0x0203, r20
-000022 9350 0204                 	sts 0x0204, r21
-000024 9360 0205                 	sts 0x0205, r22
-000026 9370 0206                 	sts 0x0206, r23
-                                 
-000028 c00f                      	rjmp end
-                                 
-                                 r16_igual:
-000029 e439                      	ldi r19, 'I'
-00002a e447                      	ldi r20, 'G'
-00002b e555                      	ldi r21, 'U'
-00002c e461                      	ldi r22, 'A'
-00002d e47c                      	ldi r23, 'L'
-                                 
-00002e 9330 0202                 	sts 0x0202, r19
-000030 9340 0203                 	sts 0x0203, r20
-000032 9350 0204                 	sts 0x0204, r21
-000034 9360 0205                 	sts 0x0205, r22
-000036 9370 0206                 	sts 0x0206, r23
-                                 
+                                 valor_fuera_rango:
+000010 e040                      	ldi r20, 0x00
+000011 9340 0203                 	sts 0x0203, r20
+000013 c000                      	rjmp end
+                                 	
                                  end:
-000038 cfc9                          rjmp ejer1
+000014 cfeb                          rjmp ejer2
 
 
 RESOURCE USE INFORMATION
@@ -1926,38 +1896,38 @@ counted separately from r26..r31 here.
 "ATmega2560" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:   2 r17:   2 r18:   0 r19:   6 r20:   6 
-r21:   6 r22:   6 r23:   6 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
+r13:   0 r14:   0 r15:   0 r16:   2 r17:   3 r18:   2 r19:   2 r20:   2 
+r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 7 out of 35 (20.0%)
+Registers used: 5 out of 35 (14.3%)
 
 "ATmega2560" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   0 brhc  :   0 
-brhs  :   0 brid  :   0 brie  :   0 brlo  :   1 brlt  :   0 brmi  :   0 
+brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
+brhs  :   0 brid  :   0 brie  :   0 brlo  :   2 brlt  :   0 brmi  :   0 
 brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
-clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   1 cpc   :   0 
+clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   2 cpc   :   0 
 cpi   :   0 cpse  :   0 dec   :   0 eicall:   0 eijmp :   0 elpm  :   0 
 eor   :   0 fmul  :   0 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 
-in    :   0 inc   :   0 jmp   :   1 ld    :   0 ldd   :   0 ldi   :  15 
-lds   :   2 lpm   :   0 lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 
+in    :   0 inc   :   0 jmp   :   0 ld    :   0 ldd   :   0 ldi   :   2 
+lds   :   3 lpm   :   0 lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 
 mul   :   0 muls  :   0 mulsu :   0 neg   :   0 nop   :   0 or    :   0 
 ori   :   0 out   :   0 pop   :   0 push  :   0 rcall :   0 ret   :   0 
-reti  :   0 rjmp  :   3 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 
+reti  :   0 rjmp  :   5 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 
 sbi   :   0 sbic  :   0 sbis  :   0 sbiw  :   0 sbr   :   0 sbrc  :   0 
 sbrs  :   0 sec   :   0 seh   :   0 sei   :   0 sen   :   0 ser   :   0 
 ses   :   0 set   :   0 sev   :   0 sez   :   0 sleep :   0 spm   :   0 
-st    :   0 std   :   0 sts   :  15 sub   :   0 subi  :   0 swap  :   0 
+st    :   0 std   :   0 sts   :   2 sub   :   0 subi  :   0 swap  :   0 
 tst   :   0 wdr   :   0 
-Instructions used: 8 out of 116 (6.9%)
+Instructions used: 6 out of 116 (5.2%)
 
 "ATmega2560" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000072    114      0    114  262144   0.0%
+[.cseg] 0x000000 0x00002a     42      0     42  262144   0.0%
 [.dseg] 0x000200 0x000200      0      0      0    8192   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 
