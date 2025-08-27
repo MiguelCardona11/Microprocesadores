@@ -1,0 +1,53 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega2560"</DEVICE>
+ <WORKING_DIR>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\Debug\ejercicio_3.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>ejercicio_3.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>ejercicio_3.map</FILE>
+  <FILE>ejercicio_3.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <start><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>9</LINE></start>
+  <verificar_letra_1><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>17</LINE></verificar_letra_1>
+  <igual_cero><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>75</LINE></igual_cero>
+  <puede_ser_min_may_1><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>27</LINE></puede_ser_min_may_1>
+  <verificar_letra_2><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>47</LINE></verificar_letra_2>
+  <puede_ser_min_simbolo_1><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>33</LINE></puede_ser_min_simbolo_1>
+  <puede_ser_min_simbolo_sup_1><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>39</LINE></puede_ser_min_simbolo_sup_1>
+  <puede_ser_min_may_2><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>56</LINE></puede_ser_min_may_2>
+  <verificar_letra_3><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>78</LINE></verificar_letra_3>
+  <puede_ser_min_simbolo_2><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>62</LINE></puede_ser_min_simbolo_2>
+  <puede_ser_min_simbolo_sup_2><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>68</LINE></puede_ser_min_simbolo_sup_2>
+  <end><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>196</LINE></end>
+  <puede_ser_min_may_3><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>87</LINE></puede_ser_min_may_3>
+  <verificar_letra_4><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>108</LINE></verificar_letra_4>
+  <puede_ser_min_simbolo_3><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>93</LINE></puede_ser_min_simbolo_3>
+  <puede_ser_min_simbolo_sup_3><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>99</LINE></puede_ser_min_simbolo_sup_3>
+  <puede_ser_min_may_4><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>117</LINE></puede_ser_min_may_4>
+  <verificar_letra_5><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>138</LINE></verificar_letra_5>
+  <puede_ser_min_simbolo_4><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>123</LINE></puede_ser_min_simbolo_4>
+  <puede_ser_min_simbolo_sup_4><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>129</LINE></puede_ser_min_simbolo_sup_4>
+  <puede_ser_min_may_5><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>147</LINE></puede_ser_min_may_5>
+  <verificar_letra_6><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>168</LINE></verificar_letra_6>
+  <puede_ser_min_simbolo_5><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>153</LINE></puede_ser_min_simbolo_5>
+  <puede_ser_min_simbolo_sup_5><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>159</LINE></puede_ser_min_simbolo_sup_5>
+  <puede_ser_min_may_6><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>177</LINE></puede_ser_min_may_6>
+  <puede_ser_min_simbolo_6><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>183</LINE></puede_ser_min_simbolo_6>
+  <puede_ser_min_simbolo_sup_6><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_3\ejercicio_3\main.asm</FILE><LINE>189</LINE></puede_ser_min_simbolo_sup_6>
+ </LABELS>
+</ASSEMBLER_INFO>
