@@ -12,7 +12,6 @@ start:
 	ldi r19, 0x00		; cero para comparar
 	ldi r20, 0x41		; 41 para comparar (A)
 	ldi r21, 0x5b		; 5b , Nota: Z = 5a}
-	rjmp verificar_letra_1
 
 verificar_letra_1:
 	lds r16, 0x0200		; VERIFICANDO LETRA 1

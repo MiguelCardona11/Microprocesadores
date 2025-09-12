@@ -1,0 +1,32 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega2560"</DEVICE>
+ <WORKING_DIR>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_1\ejercicio_1\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_1\ejercicio_1\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_1\ejercicio_1\Debug\ejercicio_1.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>ejercicio_1.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>ejercicio_1.map</FILE>
+  <FILE>ejercicio_1.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <start><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_1\ejercicio_1\main.asm</FILE><LINE>9</LINE></start>
+  <verificar_letra><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_1\ejercicio_1\main.asm</FILE><LINE>19</LINE></verificar_letra>
+  <end><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_1\ejercicio_1\main.asm</FILE><LINE>58</LINE></end>
+  <puede_ser_min_may><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_1\ejercicio_1\main.asm</FILE><LINE>34</LINE></puede_ser_min_may>
+  <puede_ser_min_simbolo><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_1\ejercicio_1\main.asm</FILE><LINE>41</LINE></puede_ser_min_simbolo>
+  <puede_ser_min_simbolo_sup><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Codigos asembler\clase 4\ejercicio_1\ejercicio_1\main.asm</FILE><LINE>48</LINE></puede_ser_min_simbolo_sup>
+ </LABELS>
+</ASSEMBLER_INFO>
