@@ -15,53 +15,105 @@ start:
     out DDRF,r20       ; PORTF salida
     out DDRC,r20       ; PORTC salida
 
-    ldi r21,0          ; índice de letra (0..5)
+	; BORRAR
+	ldi r20, 0x41
+	sts 0x200, r20
+	ldi r20, 0x42
+	sts 0x201, r20
+	ldi r20, 0x41
+	sts 0x202, r20
+	
+    ldi r21, 0          ; índice de letra (0..5)
+	; Letra
+	ldi r26, low(0x200)
+	ldi r27, high(0x200)
 
 leer_palabra:
-	lds r23, 0x200
+	ld r23, X
 	cp r23, r16
 	breq termina_palabra
 
 	cpi r23, 'A'
 	breq mostrar_a
-	
+
+	cpi r23, 'B'
+	breq mostrar_b
+
+	cpi r23, 'C'
+	breq mostrar_c
+
+	cpi r23, 'D'
+	breq mostrar_d
+
+	cpi r23, 'E'
+	breq mostrar_e
+
+	cpi r23, 'F'
+	breq mostrar_f
 
 mostrar_a:
-	
+	ldi r21, 0
+	call mostrar_letra
+    call esperar_1s
+	adiw r26, 1
+	rjmp leer_palabra
+
+mostrar_b:
+	ldi r21, 2
+	call mostrar_letra
+    call esperar_1s
+	adiw r26, 1
+	rjmp leer_palabra
+
+mostrar_c:
+	ldi r21, 4
+	call mostrar_letra
+    call esperar_1s
+	adiw r26, 1
+	rjmp leer_palabra
 
 termina_palabra:
-	
+	ldi r26, low(0x200)
+	rjmp leer_palabra	
 
+mostrar_d:
+	ldi r21, 6
+	call mostrar_letra
+    call esperar_1s
+	adiw r26, 1
+	rjmp leer_palabra
 
+mostrar_e:
+	ldi r21, 8
+	call mostrar_letra
+    call esperar_1s
+	adiw r26, 1
+	rjmp leer_palabra
 
+mostrar_f:
+	ldi r21, 10
+	call mostrar_letra
+    call esperar_1s
+	adiw r26, 1
+	rjmp leer_palabra
 
-contar:
-    ; cargar base de tabla en Z
+mostrar_letra:
+	; cargar base de tabla en Z
     ldi ZL,low(tabla*2)
     ldi ZH,high(tabla*2)
-
-    ; sumar offset en bytes a puntero Z
+	; sumar offset en bytes a puntero Z
     add ZL,r21
-    adc ZH,r1
-
-    ; leer byte para PORTF
+    adc ZH,r16
+	
+	; leer byte para PORTF
     lpm r22,Z
     out PORTF,r22
-
-    ; siguiente byte = PORTC
+	
+	; siguiente byte = PORTC
     adiw ZL,1          ; Z = Z + 1
     lpm r22,Z
     out PORTC,r22
-
-    call esperar_1s
-
-    ; avanzar offset en bytes a la siguiente letra (sumar 2)
-    subi r21,-2        ; r21 = r21 + 2
-    cpi  r21,12        ; 6 letras * 2 bytes = 12
-    brlo contar
-    ldi r21,0
-    rjmp contar
-
+	ret	
 
 esperar_1s:	; ~ 15.904.767 ciclos
 	ldi r16, 0x00			; 1		--> 1c
@@ -69,7 +121,6 @@ esperar_1s:	; ~ 15.904.767 ciclos
 
 	call ciclo_3			; 5		--> 5c + 15.904.755 = 15.904.760
 	ret						; 5		--> 5c
-
 
 ciclo_1:	; ~2.295 ciclos
 	dec r17					; 1		--> 1c * 255 = 255
@@ -93,16 +144,18 @@ ciclo_3:	; ~ 15.904.755 ciclos
 	brne ciclo_3			; 2		--> 2c * 27 = 54
 	ret						; 5		--> 5c * 27 = 135
 
-
 tabla:
-	;  A to F en portF y portC
-	.db 0x13, 0xfc, 0x33, 0x74, 0x63, 0xfc, 0x0d, 0xdc, 0x63, 0x74, 0x73, 0x74
+	; abcd efgh jklm np
+	; 0001 0011 0111 0111 --> A --> 0x13 0x77
+	; 0000 1101 0101 1111 --> B --> 0x0D 0x5F
+	; 0110 0011 1111 1111 --> C --> 0x63 0xFF
+	; 0000 1101 1101 1111 --> D --> 0x0D 0xDF
+	; 0110 0011 1111 0111 --> E --> 0x63 0xF7
+	; 0111 0011 1111 0111 --> F --> 0x73 0xF7
 
-	; abcdefgh jklmnp
-	;						portF	portC
-	; 0001 0011 1111 1100	0x13	0xfc
-	; 0011 0011 0111 0100	0x33	0x74
-	; 0110 0011 1111 1100	0x63	0xfc
-	; 0000 1101 1101 1100	0x0d	0xdc
-	; 0110 0011 0111 0100	0x63	0x74
-	; 0111 0011 0111 0100	0x73	0x74
+	.db 0x13, 0x77, 0x0D, 0x5F, 0x63, 0xFF, 0x0D, 0xDF, 0x63, 0xF7, 0x73, 0xF7
+	;   A(0)
+
+	; User = A --> 0
+	;		 B --> 2
+	;		 C --> 4
