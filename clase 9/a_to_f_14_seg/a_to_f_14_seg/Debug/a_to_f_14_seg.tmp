@@ -24,18 +24,12 @@
  <LABELS>
   <start><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>12</LINE></start>
   <leer_palabra><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>31</LINE></leer_palabra>
-  <termina_palabra><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>75</LINE></termina_palabra>
-  <mostrar_a><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>54</LINE></mostrar_a>
-  <mostrar_b><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>61</LINE></mostrar_b>
-  <mostrar_c><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>68</LINE></mostrar_c>
-  <mostrar_d><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>79</LINE></mostrar_d>
-  <mostrar_e><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>86</LINE></mostrar_e>
-  <mostrar_f><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>93</LINE></mostrar_f>
-  <mostrar_letra><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>100</LINE></mostrar_letra>
-  <esperar_1s><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>118</LINE></esperar_1s>
-  <tabla><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>148</LINE></tabla>
-  <ciclo_3><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>139</LINE></ciclo_3>
-  <ciclo_1><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>125</LINE></ciclo_1>
-  <ciclo_2><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>131</LINE></ciclo_2>
+  <termina_palabra><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>43</LINE></termina_palabra>
+  <mostrar_letra><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>47</LINE></mostrar_letra>
+  <esperar_1s><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>65</LINE></esperar_1s>
+  <tabla><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>94</LINE></tabla>
+  <ciclo_3><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>86</LINE></ciclo_3>
+  <ciclo_1><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>72</LINE></ciclo_1>
+  <ciclo_2><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>78</LINE></ciclo_2>
  </LABELS>
 </ASSEMBLER_INFO>

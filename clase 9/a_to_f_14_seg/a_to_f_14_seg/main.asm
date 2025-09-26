@@ -20,7 +20,7 @@ start:
 	sts 0x200, r20
 	ldi r20, 0x42
 	sts 0x201, r20
-	ldi r20, 0x41
+	ldi r20, 0x43
 	sts 0x202, r20
 	
     ldi r21, 0          ; índice de letra (0..5)
@@ -33,42 +33,10 @@ leer_palabra:
 	cp r23, r16
 	breq termina_palabra
 
-	cpi r23, 'A'
-	breq mostrar_a
-
-	cpi r23, 'B'
-	breq mostrar_b
-
-	cpi r23, 'C'
-	breq mostrar_c
-
-	cpi r23, 'D'
-	breq mostrar_d
-
-	cpi r23, 'E'
-	breq mostrar_e
-
-	cpi r23, 'F'
-	breq mostrar_f
-
-mostrar_a:
-	ldi r21, 0
+	subi r23, 'A'
+	lsl r23
 	call mostrar_letra
-    call esperar_1s
-	adiw r26, 1
-	rjmp leer_palabra
-
-mostrar_b:
-	ldi r21, 2
-	call mostrar_letra
-    call esperar_1s
-	adiw r26, 1
-	rjmp leer_palabra
-
-mostrar_c:
-	ldi r21, 4
-	call mostrar_letra
-    call esperar_1s
+	call esperar_1s
 	adiw r26, 1
 	rjmp leer_palabra
 
@@ -76,33 +44,12 @@ termina_palabra:
 	ldi r26, low(0x200)
 	rjmp leer_palabra	
 
-mostrar_d:
-	ldi r21, 6
-	call mostrar_letra
-    call esperar_1s
-	adiw r26, 1
-	rjmp leer_palabra
-
-mostrar_e:
-	ldi r21, 8
-	call mostrar_letra
-    call esperar_1s
-	adiw r26, 1
-	rjmp leer_palabra
-
-mostrar_f:
-	ldi r21, 10
-	call mostrar_letra
-    call esperar_1s
-	adiw r26, 1
-	rjmp leer_palabra
-
 mostrar_letra:
 	; cargar base de tabla en Z
     ldi ZL,low(tabla*2)
     ldi ZH,high(tabla*2)
 	; sumar offset en bytes a puntero Z
-    add ZL,r21
+    add ZL,r23
     adc ZH,r16
 	
 	; leer byte para PORTF

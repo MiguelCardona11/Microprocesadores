@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm Fri Sep 19 15:51:02 2025
+AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 10\contador_intgerrupciones_PCINT\contador_intgerrupciones_PCINT\main.asm Fri Sep 19 16:05:44 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
@@ -1842,117 +1842,69 @@ AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Si
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-                                 ; a_to_f_14_seg.asm
+                                 ; contador_intgerrupciones_PCINT.asm
                                  ;
-                                 ; Created: 12/09/2025 4:03:49 p. m.
+                                 ; Created: 17/09/2025 11:34:49 a. m.
                                  ; Author : Miguel
                                  ;
-                                 ;Abecedario de la A a la F. El usuario puede escribir una palabra de la longitud que quiera con este abecedario. Termina en 0.
-                                 ;En memoria del programa (.db - ROM) se guardan en hex los equivalentes de las letras para 14-seg.
-                                 ;El usuario escribe en ascii la palabra que quiera en la memoria de datos (RAM – data IRAM)
-                                 ;Se muestra la palabra escrita en el 14-seg
+                                 
+                                 .org 0x00
+000000 c012                      rjmp start          ; reset
+                                 
+                                 .org 0x0012			; vector de interrupción para grupo 0
+000012 c014                      rjmp ISR_PCINT0
                                  
                                  start:
-                                     ; configurar puertos
-000000 ef4f                          ldi r20,0xFF
-000001 bb40                          out DDRF,r20       ; PORTF salida
-000002 b947                          out DDRC,r20       ; PORTC salida
+000013 ef4f                      	ldi r20, 0xff	; 1
+000014 bb40                      	out ddrf, r20	; portF de salida
                                  
-                                 	; BORRAR
-000003 e441                      	ldi r20, 0x41
-000004 9340 0200                 	sts 0x200, r20
-000006 e442                      	ldi r20, 0x42
-000007 9340 0201                 	sts 0x201, r20
-000009 e443                      	ldi r20, 0x43
-00000a 9340 0202                 	sts 0x202, r20
+000015 ef7b                      	ldi r23, 0xfb	; 1111 1011
+000016 b974                      	out ddrb, r23	; bit 3 portB ENTRADA
+                                 
+000017 9478                      	sei				; Set Global Interrupt Flag (I=1) SREG.7
+                                 
+                                 	; Se habilita el grupo 0 de interrupciones
+000018 e081                      	ldi r24, 0x01
+000019 9380 0068                 	sts PCICR,r24
+                                 
+                                 	; Se habilita la máscara para PCINT3
+00001b e098                      	ldi r25, 0x08	; 0000 1000
+00001c 9390 006b                 	sts PCMSK0,r25
+                                 
+00001e e050                      	ldi r21, 0x00	; inicializa contador en 0
+                                 
+                                 contar:
+                                 	; poner el valor de Z en el valor equivalente al contador para 7 segmentos
+00001f e5e2                      	ldi ZL, low(tabla*2)		; r30 nibble low de Z
                                  	
-00000c e050                          ldi r21, 0          ; índice de letra (0..5)
-                                 	; Letra
-00000d e0a0                      	ldi r26, low(0x200)
-00000e e0b2                      	ldi r27, high(0x200)
-                                 
-                                 leer_palabra:
-00000f 917c                      	ld r23, X
-000010 1770                      	cp r23, r16
-000011 f041                      	breq termina_palabra
-                                 
-000012 5471                      	subi r23, 'A'
-000013 0f77                      	lsl r23
-000014 940e 001c                 	call mostrar_letra
-000016 940e 0026                 	call esperar_1s
-000018 9611                      	adiw r26, 1
-000019 cff5                      	rjmp leer_palabra
-                                 
-                                 termina_palabra:
-00001a e0a0                      	ldi r26, low(0x200)
-00001b cff3                      	rjmp leer_palabra	
-                                 
-                                 mostrar_letra:
-                                 	; cargar base de tabla en Z
-00001c e7ea                          ldi ZL,low(tabla*2)
-00001d e0f0                          ldi ZH,high(tabla*2)
-                                 	; sumar offset en bytes a puntero Z
-00001e 0fe7                          add ZL,r23
-00001f 1ff0                          adc ZH,r16
+                                 	; tabla + valor de contador actual
+000020 0fe5                      	add ZL, r21
                                  	
-                                 	; leer byte para PORTF
-000020 9164                          lpm r22,Z
-000021 bb61                          out PORTF,r22
-                                 	
-                                 	; siguiente byte = PORTC
-000022 9631                          adiw ZL,1          ; Z = Z + 1
-000023 9164                          lpm r22,Z
-000024 b968                          out PORTC,r22
-000025 9508                      	ret	
+000021 9164                      	lpm r22, Z		; pongo en r22 la direccion del valor de Z
+000022 bb61                      	out portf, r22	; mando la señal para mostar Z en 7 segmentos
                                  
-                                 esperar_1s:	; ~ 15.904.767 ciclos
-000026 e000                      	ldi r16, 0x00			; 1		--> 1c
-000027 e13f                      	ldi r19, 0x1f			; 1		--> 1c
+000023 3150                          cpi r21, 0x10
+000024 f3d0                          brlo contar
+000025 e050                          ldi r21, 0x00
+000026 cff8                          rjmp contar
                                  
-000028 940e 0036                 	call ciclo_3			; 5		--> 5c + 15.904.755 = 15.904.760
-00002a 9508                      	ret						; 5		--> 5c
                                  
-                                 ciclo_1:	; ~2.295 ciclos
-00002b 951a                      	dec r17					; 1		--> 1c * 255 = 255
-00002c 1701                      	cp r16, r17				; 1		--> 1c * 255 = 255
-00002d f7e9                      	brne ciclo_1			; 2		--> 2c * 255 = 510
-00002e 9508                      	ret						; 5	    --> 5c * 255 = 1275
-                                 
-                                 ciclo_2:	; ~589.050 ciclos
-00002f ef1f                      	ldi r17, 0xff			; 1		--> 1c * 255 = 255
-000030 940e 002b                 	call ciclo_1			; 5		--> (5c + 2.295) * 255 = 586.500
-000032 952a                      	dec r18					; 1		--> 1c * 255 = 255
-000033 1702                      	cp r16, r18				; 1		--> 1c * 255 = 255
-000034 f7d1                      	brne ciclo_2			; 2		--> 2c * 255 = 510
-000035 9508                      	ret						; 5		--> 5c * 255 = 1275
-                                 
-                                 ciclo_3:	; ~ 15.904.755 ciclos
-000036 ef2f                      	ldi r18, 0xff			; 1		--> 1c * 27 = 27
-000037 940e 002f                 	call ciclo_2			; 5		--> (5c + 589.050) * 27 = 15.904.485
-000039 953a                      	dec r19					; 1		--> 1c * 27 = 27
-00003a 1703                      	cp r16, r19				; 1		--> 1c * 27 = 27	
-00003b f7d1                      	brne ciclo_3			; 2		--> 2c * 27 = 54
-00003c 9508                      	ret						; 5		--> 5c * 27 = 135
+                                 ; --- rutina de servicio para INT3 ---
+                                 ISR_PCINT0:
+000027 9553                          inc r21		; aumentar contador
+000028 9518                          reti
                                  
                                  tabla:
-                                 	; abcd efgh jklm np
-                                 	; 0001 0011 0111 0111 --> A --> 0x13 0x77
-                                 	; 0000 1101 0101 1111 --> B --> 0x0D 0x5F
-                                 	; 0110 0011 1111 1111 --> C --> 0x63 0xFF
-                                 	; 0000 1101 1101 1111 --> D --> 0x0D 0xDF
-                                 	; 0110 0011 1111 0111 --> E --> 0x63 0xF7
-                                 	; 0111 0011 1111 0111 --> F --> 0x73 0xF7
+                                     ;	0	  1		2	  3		4	  5	    6	  7     8     9		a	  b		c	  d		e	  f
+000029 4f01
+00002a 0612
+00002b 244c
+00002c 0f20
+00002d 0400
+00002e 6008
+00002f 4231
+000030 3830                      	.db 0x01, 0x4f, 0x12, 0x06, 0x4c, 0x24, 0x20, 0x0f, 0x00, 0x04, 0x08, 0x60, 0x31, 0x42, 0x30, 0x38
                                  
-00003d 7713
-00003e 5f0d
-00003f ff63
-000040 df0d
-000041 f763
-000042 f773                      	.db 0x13, 0x77, 0x0D, 0x5F, 0x63, 0xFF, 0x0D, 0xDF, 0x63, 0xF7, 0x73, 0xF7
-                                 	;   A(0)
-                                 
-                                 	; User = A --> 0
-                                 	;		 B --> 2
 
 
 RESOURCE USE INFORMATION
@@ -1970,40 +1922,40 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega2560" register use summary:
-x  :   1 y  :   0 z  :   2 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   0 y  :   0 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:   6 r17:   3 r18:   3 r19:   3 r20:   9 
-r21:   1 r22:   4 r23:   5 r24:   0 r25:   0 r26:   3 r27:   1 r28:   0 
-r29:   0 r30:   3 r31:   2 
-Registers used: 14 out of 35 (40.0%)
+r13:   0 r14:   0 r15:   0 r16:   0 r17:   0 r18:   0 r19:   0 r20:   2 
+r21:   5 r22:   2 r23:   2 r24:   2 r25:   2 r26:   0 r27:   0 r28:   0 
+r29:   0 r30:   2 r31:   0 
+Registers used: 8 out of 35 (22.9%)
 
 "ATmega2560" instruction use summary:
-.lds  :   0 .sts  :   0 adc   :   1 add   :   1 adiw  :   2 and   :   0 
+.lds  :   0 .sts  :   0 adc   :   0 add   :   1 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   0 brhc  :   0 
-brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   3 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   5 cbi   :   0 cbr   :   0 
+brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
+brhs  :   0 brid  :   0 brie  :   0 brlo  :   1 brlt  :   0 brmi  :   0 
+brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
-clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   4 cpc   :   0 
-cpi   :   0 cpse  :   0 dec   :   3 eicall:   0 eijmp :   0 elpm  :   0 
+clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
+cpi   :   1 cpse  :   0 dec   :   0 eicall:   0 eijmp :   0 elpm  :   0 
 eor   :   0 fmul  :   0 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 
-in    :   0 inc   :   0 jmp   :   0 ld    :   1 ldd   :   0 ldi   :  14 
-lds   :   0 lpm   :   4 lsl   :   1 lsr   :   0 mov   :   0 movw  :   0 
+in    :   0 inc   :   1 jmp   :   0 ld    :   0 ldd   :   0 ldi   :   7 
+lds   :   0 lpm   :   2 lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 
 mul   :   0 muls  :   0 mulsu :   0 neg   :   0 nop   :   0 or    :   0 
-ori   :   0 out   :   4 pop   :   0 push  :   0 rcall :   0 ret   :   5 
-reti  :   0 rjmp  :   2 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 
+ori   :   0 out   :   3 pop   :   0 push  :   0 rcall :   0 ret   :   0 
+reti  :   1 rjmp  :   3 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 
 sbi   :   0 sbic  :   0 sbis  :   0 sbiw  :   0 sbr   :   0 sbrc  :   0 
-sbrs  :   0 sec   :   0 seh   :   0 sei   :   0 sen   :   0 ser   :   0 
+sbrs  :   0 sec   :   0 seh   :   0 sei   :   1 sen   :   0 ser   :   0 
 ses   :   0 set   :   0 sev   :   0 sez   :   0 sleep :   0 spm   :   0 
-st    :   0 std   :   0 sts   :   3 sub   :   0 subi  :   1 swap  :   0 
+st    :   0 std   :   0 sts   :   2 sub   :   0 subi  :   0 swap  :   0 
 tst   :   0 wdr   :   0 
-Instructions used: 17 out of 116 (14.7%)
+Instructions used: 11 out of 116 (9.5%)
 
 "ATmega2560" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000086    122     12    134  262144   0.1%
+[.cseg] 0x000000 0x000062     48     16     64  262144   0.0%
 [.dseg] 0x000200 0x000200      0      0      0    8192   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 

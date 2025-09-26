@@ -1,0 +1,30 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega2560"</DEVICE>
+ <WORKING_DIR>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 12\temporizadores\temporizadores\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 12\temporizadores\temporizadores\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 12\temporizadores\temporizadores\Debug\temporizadores.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>temporizadores.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>temporizadores.map</FILE>
+  <FILE>temporizadores.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <start><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 12\temporizadores\temporizadores\main.asm</FILE><LINE>16</LINE></start>
+  <ISR_TIMER1_COMPA><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 12\temporizadores\temporizadores\main.asm</FILE><LINE>67</LINE></ISR_TIMER1_COMPA>
+  <contar><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 12\temporizadores\temporizadores\main.asm</FILE><LINE>52</LINE></contar>
+  <tabla><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 12\temporizadores\temporizadores\main.asm</FILE><LINE>71</LINE></tabla>
+ </LABELS>
+</ASSEMBLER_INFO>

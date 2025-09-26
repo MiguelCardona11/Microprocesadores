@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm Fri Sep 19 15:51:02 2025
+AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 12\temporizadores\temporizadores\main.asm Wed Sep 24 12:01:10 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -1359,12 +1359,7 @@ EQU  URXC3addr    0000006c
 EQU  UDRE3addr    0000006e
 EQU  UTXC3addr    00000070
 EQU  INT_VECTORS_SIZE 00000072
-CSEG start        00000000
-CSEG leer_palabra 0000000f
-CSEG termina_palabra 0000001a
-CSEG mostrar_letra 0000001c
-CSEG esperar_1s   00000026
-CSEG tabla        0000003d
-CSEG ciclo_3      00000036
-CSEG ciclo_1      0000002b
-CSEG ciclo_2      0000002f
+CSEG start        00000023
+CSEG ISR_TIMER1_COMPA 00000043
+CSEG contar       0000003b
+CSEG tabla        00000045
