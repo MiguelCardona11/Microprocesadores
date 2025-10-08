@@ -1,0 +1,37 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega2560"</DEVICE>
+ <WORKING_DIR>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\Debug\bomba_arduino.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>bomba_arduino.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>bomba_arduino.map</FILE>
+  <FILE>bomba_arduino.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <start><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</FILE><LINE>22</LINE></start>
+  <main_loop><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</FILE><LINE>41</LINE></main_loop>
+  <parpadear><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</FILE><LINE>72</LINE></parpadear>
+  <bomba_on><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</FILE><LINE>55</LINE></bomba_on>
+  <bomba_keep><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</FILE><LINE>60</LINE></bomba_keep>
+  <actualizar_salida><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</FILE><LINE>64</LINE></actualizar_salida>
+  <parpadear_loop><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</FILE><LINE>76</LINE></parpadear_loop>
+  <esperar_1s><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</FILE><LINE>100</LINE></esperar_1s>
+  <ciclo_3><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</FILE><LINE>119</LINE></ciclo_3>
+  <ciclo_1><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</FILE><LINE>105</LINE></ciclo_1>
+  <ciclo_2><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\bomba_arduino\bomba_arduino\bomba_arduino\main.asm</FILE><LINE>111</LINE></ciclo_2>
+ </LABELS>
+</ASSEMBLER_INFO>

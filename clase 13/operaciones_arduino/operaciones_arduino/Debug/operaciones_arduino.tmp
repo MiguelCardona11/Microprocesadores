@@ -1,0 +1,35 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega2560"</DEVICE>
+ <WORKING_DIR>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\Debug\operaciones_arduino.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>operaciones_arduino.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>operaciones_arduino.map</FILE>
+  <FILE>operaciones_arduino.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <start><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\main.asm</FILE><LINE>24</LINE></start>
+  <leer_datos><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\main.asm</FILE><LINE>48</LINE></leer_datos>
+  <leer_operacion><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\main.asm</FILE><LINE>88</LINE></leer_operacion>
+  <sumar><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\main.asm</FILE><LINE>64</LINE></sumar>
+  <restar><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\main.asm</FILE><LINE>70</LINE></restar>
+  <a_and_b><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\main.asm</FILE><LINE>76</LINE></a_and_b>
+  <a_or_b><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\main.asm</FILE><LINE>82</LINE></a_or_b>
+  <mover_nibbles><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\main.asm</FILE><LINE>98</LINE></mover_nibbles>
+  <mostrar_resultado><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 13\operaciones_arduino\operaciones_arduino\main.asm</FILE><LINE>93</LINE></mostrar_resultado>
+ </LABELS>
+</ASSEMBLER_INFO>

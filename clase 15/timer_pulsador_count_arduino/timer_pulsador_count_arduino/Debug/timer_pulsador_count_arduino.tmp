@@ -1,0 +1,33 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega2560"</DEVICE>
+ <WORKING_DIR>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\Debug\timer_pulsador_count_arduino.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>timer_pulsador_count_arduino.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>timer_pulsador_count_arduino.map</FILE>
+  <FILE>timer_pulsador_count_arduino.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <start><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>14</LINE></start>
+  <contar><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>39</LINE></contar>
+  <tabla><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>79</LINE></tabla>
+  <no_cambio_btn><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>75</LINE></no_cambio_btn>
+  <actualizar_prev><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>72</LINE></actualizar_prev>
+  <despues_contar><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>61</LINE></despues_contar>
+  <espera_liberacion><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>63</LINE></espera_liberacion>
+ </LABELS>
+</ASSEMBLER_INFO>

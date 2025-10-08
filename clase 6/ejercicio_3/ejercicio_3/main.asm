@@ -38,7 +38,7 @@ start:
 	; en r24 se va a guardar el resultado de las operaciones
 
 leer_datos:
-	in r22, PINF	
+	in r22, PINF
 	call leer_operacion
 	
 	cp r23, r18

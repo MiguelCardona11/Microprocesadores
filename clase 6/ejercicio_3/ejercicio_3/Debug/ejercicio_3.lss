@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 6\ejercicio_3\ejercicio_3\main.asm Wed Sep 03 10:26:57 2025
+AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 6\ejercicio_3\ejercicio_3\main.asm Tue Sep 30 19:41:54 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
@@ -1881,7 +1881,7 @@ AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Si
                                  	; en r24 se va a guardar el resultado de las operaciones
                                  
                                  leer_datos:
-00000c b16f                      	in r22, PINF	
+00000c b16f                      	in r22, PINF
 00000d 940e 002f                 	call leer_operacion
                                  	
 00000f 1772                      	cp r23, r18
