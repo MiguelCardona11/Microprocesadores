@@ -22,12 +22,8 @@
   <FILE>timer_pulsador_count_arduino.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <start><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>14</LINE></start>
-  <contar><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>39</LINE></contar>
-  <tabla><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>79</LINE></tabla>
-  <no_cambio_btn><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>75</LINE></no_cambio_btn>
-  <actualizar_prev><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>72</LINE></actualizar_prev>
-  <despues_contar><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>61</LINE></despues_contar>
-  <espera_liberacion><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>63</LINE></espera_liberacion>
+  <start><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>35</LINE></start>
+  <loop><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>55</LINE></loop>
+  <tabla><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm</FILE><LINE>73</LINE></tabla>
  </LABELS>
 </ASSEMBLER_INFO>

@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm Fri Oct 03 16:17:50 2025
+AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm Wed Oct 08 10:57:58 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -1360,9 +1360,5 @@ EQU  UDRE3addr    0000006e
 EQU  UTXC3addr    00000070
 EQU  INT_VECTORS_SIZE 00000072
 CSEG start        00000001
-CSEG contar       00000013
-CSEG tabla        00000027
-CSEG no_cambio_btn 00000026
-CSEG actualizar_prev 00000025
-CSEG despues_contar 00000021
-CSEG espera_liberacion 00000021
+CSEG loop         0000000e
+CSEG tabla        00000016

@@ -5,80 +5,73 @@
 ; Author : Miguel
 ;
 
+;
+; contador_pulsos_timer1.asm
+; Cuenta pulsos externos en T1 → muestra el nibble bajo (hex 0..F) en PORTF (7 segmentos).
+;
+
+; Configurar el Timer1 para que cuente pulsos externos en T1 (pin 11 del ATmega2560)
+; El contador solo avanza cuando recibe un pulso en el pin T1
+
+;
+; contador_pulsos_timer1.asm
+; Cuenta pulsos externos en T1 → muestra el nibble bajo (hex 0..F) en PORTF (7 segmentos).
+;
+
+; contador_pulsos_timer1_adaptado.asm
+; Cuenta pulsos externos en T1 → muestra el nibble bajo (hex 0..F) en PORTF (7 segmentos).
+;
+
+; contador_pulsos_timer5.asm
+; Cuenta pulsos externos en T5 → muestra el nibble bajo (hex 0..F) en PORTF (7 segmentos).
+;
+
 .include "m2560def.inc"
 
-.org 0x00
+.org 0x0000
     rjmp start
 
-; ----------------- START -----------------
+; ------------------ INICIO ------------------
 start:
-    ; --- configurar display (igual que antes) ---
-    ldi r20, 0xff
-    out ddrf, r20        ; PORTF como salida (7-seg)
-    ldi r21, 0x00        ; contador = 0
+    ; ====== DISPLAY: PORTF como salida ======
+    ldi  r16, 0xFF
+    out  DDRF, r16          ; PF7..PF0 = salida
 
-    ; --- configurar boton en PD2 como entrada con pull-up ---
-    cbi DDRD, PD2        ; DDRD.PD2 = 0 => entrada
-    sbi PORTD, PD2       ; habilita pull-up interno en PD2
+    ; ====== TIMER5 como contador externo en T5 ======
+    ; Modo normal: WGM53:0 = 0000 → TCCR5A=0, WGM52=0 en TCCR5B
+    ldi  r16, 0x00
+    sts  TCCR5A, r16
 
-    ; guardar estado previo del pin (1 = no pulsado)
-    ldi r23, (1<<PD2)    ; r23 mantiene la lectura previa de PD2 (mascara)
+    ; Fuente de reloj = externa en T5 (flanco de subida): CS52:50 = 111
+    ldi  r16, (1<<CS52) | (1<<CS51) | (1<<CS50)
+    sts  TCCR5B, r16
 
-    ; --- (opcional) dejar configuración de Timer1 como en tu código original ---
-    ldi r16,(1<<WGM12)|(1<<CS12)|(1<<CS10) ; CTC + prescaler 1024 (si lo quieres usar)
-    sts TCCR1B,r16
-    ldi r16,0
-    sts TCCR1A,r16
-    ldi r16,high(15625)
-    sts OCR1AH,r16
-    ldi r16,low(15625)
-    sts OCR1AL,r16
-    ; NOTA: NO habilitamos OCIE1A aquí (no queremos que la ISR incremente)
+    ; Reiniciar contador
+    ldi  r16, 0x00
+    sts  TCNT5H, r16
+    sts  TCNT5L, r16
 
-; ----------------- BUCLE PRINCIPAL -----------------
-contar:
-    ; --- mostrar el dígito actual (igual que antes) ---
-    ldi ZL, low(tabla*2)
-    add ZL, r21
-    lpm r22, Z
-    out portf, r22
+; ------------------ BUCLE PRINCIPAL ------------------
+loop:
+    ; Leer TCNT5 de forma atómica leyendo primero LOW luego HIGH
+    lds  r18, TCNT5L        ; r18 = low byte
+    ; Tomar nibble bajo de r18 (0..15)
+    andi r18, 0x0F
 
-    ; --- leer botón y detectar flanco 1->0 (no pulsado -> pulsado) ---
-    in  r24, PIND            ; leer todo PIND
-    andi r24, (1<<PD2)      ; dejar solo el bit PD2 (0 o (1<<PD2))
-    cp  r24, r23            ; comparar con lectura previa
-    breq no_cambio_btn      ; si igual -> nada que hacer
+    ; Apuntar Z a tabla + nibble
+    ldi  ZL, low(tabla*2)
+    add  ZL, r18
 
-    ; hubo cambio en el pin -> ver si ahora está PRESIONADO (0)
-    cpi r24, 0
-    brne actualizar_prev    ; si r24 != 0 => ahora está 1 (liberado) -> actualizar y seguir
+    ; Cargar patrón 7 segmentos y enviar a PORTF
+    lpm  r20, Z
+    out  PORTF, r20
 
-    ; r24 == 0 => transición 1 -> 0 detectada -> contamos 1
-    inc r21
-    cpi r21, 0x10
-    brlo despues_contar
-    ldi r21, 0x00           ; wrap a 0 tras 0x0F
-despues_contar:
-    ; esperar hasta que el botón sea liberado (simple debounce / evitar repetición por mantener)
-espera_liberacion:
-    in r24, PIND
-    andi r24, (1<<PD2)
-    cpi r24, 0
-    breq espera_liberacion  ; permanecer aquí mientras siga PRESIONADO (PD2 == 0)
+    rjmp loop
 
-    ; opcional: pequeña espera adicional para rebotado (si quieres)
-    ; (puedes implementar un pequeño bucle de retardo aquí)
-
-actualizar_prev:
-    mov r23, r24           ; guardar lectura actual como previa (0 o (1<<PD2))
-
-no_cambio_btn:
-    rjmp contar
-
-; ----------------- TABLA 7-seg (igual que la tuya) -----------------
+; ------------------ TABLA 7-SEG (0..F) ------------------
+; Ajusta los valores según tu tipo de display (ánodo común / cátodo común).
 tabla:
-    ; 0   1    2    3    4    5    6    7    8    9    a    b    c    d    e    f
-    .db 0x01,0x4f,0x12,0x06,0x4c,0x24,0x20,0x0f,0x00,0x04,0x08,0x60,0x31,0x42,0x30,0x38
-
+    ;    0     1     2     3     4     5     6     7     8     9     A     b     c     d     e     f
+    .db  0x01, 0x4F, 0x12, 0x06, 0x4C, 0x24, 0x20, 0x0F, 0x00, 0x04, 0x08, 0x60, 0x31, 0x42, 0x30, 0x38
 
 

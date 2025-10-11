@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm Fri Oct 03 16:17:50 2025
+AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm Wed Oct 08 10:57:58 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
-C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm(8): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
+C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm(29): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
-C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm(8): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
+C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15\timer_pulsador_count_arduino\timer_pulsador_count_arduino\main.asm(29): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
                                  
                                  ;
                                  
@@ -1850,6 +1850,27 @@ C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15
                                  ; Author : Miguel
                                  ;
                                  
+                                 ;
+                                 ; contador_pulsos_timer1.asm
+                                 ; Cuenta pulsos externos en T1 → muestra el nibble bajo (hex 0..F) en PORTF (7 segmentos).
+                                 ;
+                                 
+                                 ; Configurar el Timer1 para que cuente pulsos externos en T1 (pin 11 del ATmega2560)
+                                 ; El contador solo avanza cuando recibe un pulso en el pin T1
+                                 
+                                 ;
+                                 ; contador_pulsos_timer1.asm
+                                 ; Cuenta pulsos externos en T1 → muestra el nibble bajo (hex 0..F) en PORTF (7 segmentos).
+                                 ;
+                                 
+                                 ; contador_pulsos_timer1_adaptado.asm
+                                 ; Cuenta pulsos externos en T1 → muestra el nibble bajo (hex 0..F) en PORTF (7 segmentos).
+                                 ;
+                                 
+                                 ; contador_pulsos_timer5.asm
+                                 ; Cuenta pulsos externos en T5 → muestra el nibble bajo (hex 0..F) en PORTF (7 segmentos).
+                                 ;
+                                 
                                  .include "m2560def.inc"
                                  
                                  ;***** Created: 2011-02-09 12:03 ******* Source: ATmega2560.xml **********
@@ -1895,86 +1916,58 @@ C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 15
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-                                 .org 0x00
+                                 .org 0x0000
 000000 c000                          rjmp start
                                  
-                                 ; ----------------- START -----------------
+                                 ; ------------------ INICIO ------------------
                                  start:
-                                     ; --- configurar display (igual que antes) ---
-000001 ef4f                          ldi r20, 0xff
-000002 bb40                          out ddrf, r20        ; PORTF como salida (7-seg)
-000003 e050                          ldi r21, 0x00        ; contador = 0
+                                     ; ====== DISPLAY: PORTF como salida ======
+000001 ef0f                          ldi  r16, 0xFF
+000002 bb00                          out  DDRF, r16          ; PF7..PF0 = salida
                                  
-                                     ; --- configurar boton en PD2 como entrada con pull-up ---
-000004 9852                          cbi DDRD, PD2        ; DDRD.PD2 = 0 => entrada
-000005 9a5a                          sbi PORTD, PD2       ; habilita pull-up interno en PD2
+                                     ; ====== TIMER5 como contador externo en T5 ======
+                                     ; Modo normal: WGM53:0 = 0000 → TCCR5A=0, WGM52=0 en TCCR5B
+000003 e000                          ldi  r16, 0x00
+000004 9300 0120                     sts  TCCR5A, r16
                                  
-                                     ; guardar estado previo del pin (1 = no pulsado)
-000006 e074                          ldi r23, (1<<PD2)    ; r23 mantiene la lectura previa de PD2 (mascara)
+                                     ; Fuente de reloj = externa en T5 (flanco de subida): CS52:50 = 111
+000006 e007                          ldi  r16, (1<<CS52) | (1<<CS51) | (1<<CS50)
+000007 9300 0121                     sts  TCCR5B, r16
                                  
-                                     ; --- (opcional) dejar configuración de Timer1 como en tu código original ---
-000007 e00d                          ldi r16,(1<<WGM12)|(1<<CS12)|(1<<CS10) ; CTC + prescaler 1024 (si lo quieres usar)
-000008 9300 0081                     sts TCCR1B,r16
-00000a e000                          ldi r16,0
-00000b 9300 0080                     sts TCCR1A,r16
-00000d e30d                          ldi r16,high(15625)
-00000e 9300 0089                     sts OCR1AH,r16
-000010 e009                          ldi r16,low(15625)
-000011 9300 0088                     sts OCR1AL,r16
-                                     ; NOTA: NO habilitamos OCIE1A aquí (no queremos que la ISR incremente)
+                                     ; Reiniciar contador
+000009 e000                          ldi  r16, 0x00
+00000a 9300 0125                     sts  TCNT5H, r16
+00000c 9300 0124                     sts  TCNT5L, r16
                                  
-                                 ; ----------------- BUCLE PRINCIPAL -----------------
-                                 contar:
-                                     ; --- mostrar el dígito actual (igual que antes) ---
-000013 e4ee                          ldi ZL, low(tabla*2)
-000014 0fe5                          add ZL, r21
-000015 9164                          lpm r22, Z
-000016 bb61                          out portf, r22
+                                 ; ------------------ BUCLE PRINCIPAL ------------------
+                                 loop:
+                                     ; Leer TCNT5 de forma atómica leyendo primero LOW luego HIGH
+00000e 9120 0124                     lds  r18, TCNT5L        ; r18 = low byte
+                                     ; Tomar nibble bajo de r18 (0..15)
+000010 702f                          andi r18, 0x0F
                                  
-                                     ; --- leer botón y detectar flanco 1->0 (no pulsado -> pulsado) ---
-000017 b189                          in  r24, PIND            ; leer todo PIND
-000018 7084                          andi r24, (1<<PD2)      ; dejar solo el bit PD2 (0 o (1<<PD2))
-000019 1787                          cp  r24, r23            ; comparar con lectura previa
-00001a f059                          breq no_cambio_btn      ; si igual -> nada que hacer
+                                     ; Apuntar Z a tabla + nibble
+000011 e2ec                          ldi  ZL, low(tabla*2)
+000012 0fe2                          add  ZL, r18
                                  
-                                     ; hubo cambio en el pin -> ver si ahora está PRESIONADO (0)
-00001b 3080                          cpi r24, 0
-00001c f441                          brne actualizar_prev    ; si r24 != 0 => ahora está 1 (liberado) -> actualizar y seguir
+                                     ; Cargar patrón 7 segmentos y enviar a PORTF
+000013 9144                          lpm  r20, Z
+000014 bb41                          out  PORTF, r20
                                  
-                                     ; r24 == 0 => transición 1 -> 0 detectada -> contamos 1
-00001d 9553                          inc r21
-00001e 3150                          cpi r21, 0x10
-00001f f008                          brlo despues_contar
-000020 e050                          ldi r21, 0x00           ; wrap a 0 tras 0x0F
-                                 despues_contar:
-                                     ; esperar hasta que el botón sea liberado (simple debounce / evitar repetición por mantener)
-                                 espera_liberacion:
-000021 b189                          in r24, PIND
-000022 7084                          andi r24, (1<<PD2)
-000023 3080                          cpi r24, 0
-000024 f3e1                          breq espera_liberacion  ; permanecer aquí mientras siga PRESIONADO (PD2 == 0)
+000015 cff8                          rjmp loop
                                  
-                                     ; opcional: pequeña espera adicional para rebotado (si quieres)
-                                     ; (puedes implementar un pequeño bucle de retardo aquí)
-                                 
-                                 actualizar_prev:
-000025 2f78                          mov r23, r24           ; guardar lectura actual como previa (0 o (1<<PD2))
-                                 
-                                 no_cambio_btn:
-000026 cfec                          rjmp contar
-                                 
-                                 ; ----------------- TABLA 7-seg (igual que la tuya) -----------------
+                                 ; ------------------ TABLA 7-SEG (0..F) ------------------
+                                 ; Ajusta los valores según tu tipo de display (ánodo común / cátodo común).
                                  tabla:
-                                     ; 0   1    2    3    4    5    6    7    8    9    a    b    c    d    e    f
-000027 4f01
-000028 0612
-000029 244c
-00002a 0f20
-00002b 0400
-00002c 6008
-00002d 4231
-00002e 3830                          .db 0x01,0x4f,0x12,0x06,0x4c,0x24,0x20,0x0f,0x00,0x04,0x08,0x60,0x31,0x42,0x30,0x38
-                                 
+                                     ;    0     1     2     3     4     5     6     7     8     9     A     b     c     d     e     f
+000016 4f01
+000017 0612
+000018 244c
+000019 0f20
+00001a 0400
+00001b 6008
+00001c 4231
+00001d 3830                          .db  0x01, 0x4F, 0x12, 0x06, 0x4C, 0x24, 0x20, 0x0F, 0x00, 0x04, 0x08, 0x60, 0x31, 0x42, 0x30, 0x38
                                  
                                  
 
@@ -1996,38 +1989,38 @@ counted separately from r26..r31 here.
 "ATmega2560" register use summary:
 x  :   0 y  :   0 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:   8 r17:   0 r18:   0 r19:   0 r20:   2 
-r21:   5 r22:   2 r23:   3 r24:   8 r25:   0 r26:   0 r27:   0 r28:   0 
+r13:   0 r14:   0 r15:   0 r16:   9 r17:   0 r18:   3 r19:   0 r20:   2 
+r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   2 r31:   0 
-Registers used: 8 out of 35 (22.9%)
+Registers used: 5 out of 35 (14.3%)
 
 "ATmega2560" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   1 adiw  :   0 and   :   0 
-andi  :   2 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   0 break :   0 breq  :   2 brge  :   0 brhc  :   0 
-brhs  :   0 brid  :   0 brie  :   0 brlo  :   1 brlt  :   0 brmi  :   0 
-brne  :   1 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   1 cbr   :   0 
+andi  :   1 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
+brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
+brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
+brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
-clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   1 cpc   :   0 
-cpi   :   3 cpse  :   0 dec   :   0 eicall:   0 eijmp :   0 elpm  :   0 
+clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
+cpi   :   0 cpse  :   0 dec   :   0 eicall:   0 eijmp :   0 elpm  :   0 
 eor   :   0 fmul  :   0 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 
-in    :   2 inc   :   1 jmp   :   0 ld    :   0 ldd   :   0 ldi   :   9 
-lds   :   0 lpm   :   2 lsl   :   0 lsr   :   0 mov   :   1 movw  :   0 
+in    :   0 inc   :   0 jmp   :   0 ld    :   0 ldd   :   0 ldi   :   5 
+lds   :   1 lpm   :   2 lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 
 mul   :   0 muls  :   0 mulsu :   0 neg   :   0 nop   :   0 or    :   0 
 ori   :   0 out   :   2 pop   :   0 push  :   0 rcall :   0 ret   :   0 
 reti  :   0 rjmp  :   2 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 
-sbi   :   1 sbic  :   0 sbis  :   0 sbiw  :   0 sbr   :   0 sbrc  :   0 
+sbi   :   0 sbic  :   0 sbis  :   0 sbiw  :   0 sbr   :   0 sbrc  :   0 
 sbrs  :   0 sec   :   0 seh   :   0 sei   :   0 sen   :   0 ser   :   0 
 ses   :   0 set   :   0 sev   :   0 sez   :   0 sleep :   0 spm   :   0 
 st    :   0 std   :   0 sts   :   4 sub   :   0 subi  :   0 swap  :   0 
 tst   :   0 wdr   :   0 
-Instructions used: 17 out of 116 (14.7%)
+Instructions used: 8 out of 116 (6.9%)
 
 "ATmega2560" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x00005e     78     16     94  262144   0.0%
+[.cseg] 0x000000 0x00003c     44     16     60  262144   0.0%
 [.dseg] 0x000200 0x000200      0      0      0    8192   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 
