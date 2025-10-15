@@ -1,0 +1,35 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega2560"</DEVICE>
+ <WORKING_DIR>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\Debug\a_to_f_14_seg.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>a_to_f_14_seg.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>a_to_f_14_seg.map</FILE>
+  <FILE>a_to_f_14_seg.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <start><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>12</LINE></start>
+  <leer_palabra><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>32</LINE></leer_palabra>
+  <termina_palabra><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>44</LINE></termina_palabra>
+  <mostrar_letra><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>48</LINE></mostrar_letra>
+  <esperar_1s><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>70</LINE></esperar_1s>
+  <tabla><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>99</LINE></tabla>
+  <ciclo_3><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>91</LINE></ciclo_3>
+  <ciclo_1><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>77</LINE></ciclo_1>
+  <ciclo_2><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 9\a_to_f_14_seg\a_to_f_14_seg\main.asm</FILE><LINE>83</LINE></ciclo_2>
+ </LABELS>
+</ASSEMBLER_INFO>

@@ -23,8 +23,8 @@
  </OUTPUT_FILES>
  <LABELS>
   <start><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 10\contador_interrupciones\contador_interrupciones\main.asm</FILE><LINE>15</LINE></start>
-  <ISR_INT3><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 10\contador_interrupciones\contador_interrupciones\main.asm</FILE><LINE>49</LINE></ISR_INT3>
-  <contar><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 10\contador_interrupciones\contador_interrupciones\main.asm</FILE><LINE>32</LINE></contar>
-  <tabla><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 10\contador_interrupciones\contador_interrupciones\main.asm</FILE><LINE>54</LINE></tabla>
+  <ISR_INT3><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 10\contador_interrupciones\contador_interrupciones\main.asm</FILE><LINE>51</LINE></ISR_INT3>
+  <contar><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 10\contador_interrupciones\contador_interrupciones\main.asm</FILE><LINE>34</LINE></contar>
+  <tabla><FILE>C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 10\contador_interrupciones\contador_interrupciones\main.asm</FILE><LINE>55</LINE></tabla>
  </LABELS>
 </ASSEMBLER_INFO>

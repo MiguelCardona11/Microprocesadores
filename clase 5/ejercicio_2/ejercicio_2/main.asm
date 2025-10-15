@@ -6,7 +6,7 @@
 ;
 
 
-; Replace with your application code
+; Comparar 2 cadenas de caracteres de máximo 16 letras, debe ser case insensitive.
 
 start:
 	ldi r17, 0x7b		; 7b , Nota: z = 7a

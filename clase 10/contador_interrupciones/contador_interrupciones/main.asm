@@ -21,9 +21,11 @@ start:
 
 	sei				; Set Global Interrupt Flag (I=1) SREG.7
 
-	ldi r24, 0xC0	; 0b11000000 bit 6 y 7 en 11 (INT3 con flanco de subida)
+	; EICRA decide si la interrupción sera con flanco de subida/bajada, ambos o por cambio (PARA INT 3:0) Nota: EICRB es para INT 7:4
+	ldi r24, 0xC0	; 1100 0000 bit 6 y 7 en 1 (INT3 con flanco de subida)
 	sts EICRA, r24	; 
 
+	; EIMSK decide cual INT se habilitará, en este caso solo habilitamos INT3
 	ldi r24, 0x08	; Activar máscara para INT3 
 	out EIMSK, r24
 

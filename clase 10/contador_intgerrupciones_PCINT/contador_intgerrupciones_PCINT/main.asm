@@ -20,11 +20,12 @@ start:
 
 	sei				; Set Global Interrupt Flag (I=1) SREG.7
 
-	; Se habilita el grupo 0 de interrupciones
+	; Se habilita el grupo 0 de interrupciones (grupo PCINT 7:0)
+	; Con PCICR se decide qué grupo habilitar
 	ldi r24, 0x01
 	sts PCICR,r24
 
-	; Se habilita la máscara para PCINT3
+	; PCMSK0 decide qué pines del grupo 0 se habilitarán para detectar interrupciones, en este caso usamos el PCINT3
 	ldi r25, 0x08	; 0000 1000
 	sts PCMSK0,r25
 
@@ -46,7 +47,7 @@ contar:
     rjmp contar
 
 
-; --- rutina de servicio para INT3 ---
+; --- rutina de servicio para PCINT3 ---
 ISR_PCINT0:
     inc r21		; aumentar contador
     reti

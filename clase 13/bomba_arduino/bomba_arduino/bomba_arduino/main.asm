@@ -25,16 +25,14 @@ start:
     ; 0x40 -> LED bomba llena parpadeante (PK6)
     
     ; Niveles / Sensores
-    ldi r18, 0x01    ; nivel 1
-    ldi r19, 0x03    ; nivel 2
-    ldi r20, 0x07    ; nivel 3
-    ldi r21, 0x0f    ; nivel 4 (lleno)
+    ldi r18, 0x01    ; nivel 1 0001
+    ldi r21, 0x0f    ; nivel 4 1111
 
     ; Puertos de entrada y salida
     ldi r16, 0x00
     ldi r17, 0xff
-    sts ddrf, r16
-    sts ddrk, r17
+    sts ddrf, r16	; portF entrada
+    sts ddrk, r17	; portK salida
 
     clr r23          ; r23 = estado bomba: bit7 LED bomba
 
@@ -54,7 +52,7 @@ main_loop:
 
 bomba_on:
     ; activa bit 7 en estado bomba
-    ori r23,0x80
+    ori r23,0x80	; 1000 0000
     rjmp actualizar_salida
 
 bomba_keep:
@@ -71,18 +69,18 @@ actualizar_salida:
 ; --- LED parpadeante mientras lleno ---
 parpadear:
     ; apagar LED bomba (bit7)
-    andi r23,0x7f
+    andi r23,0x7f	; 0111 1111
 
 parpadear_loop:
     ; encender LED lleno (bit6) + sensores
     mov r25,r22
-    ori r25,0x40
+    ori r25,0x40	; 0100 
     sts portk,r25
     call esperar_1s
 
     ; apagar LED lleno (bit6) + sensores
     mov r25,r22
-    andi r25,0xbf
+    andi r25,0xbf	; 1011
     sts portk,r25
     call esperar_1s
 
