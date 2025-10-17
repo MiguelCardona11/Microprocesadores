@@ -69,25 +69,25 @@ start:
 		sbic EECR, EEPE        ; Salta si EEPE = 0 (no está escribiendo)
 		rjmp escribir_eeprom   ; Si EEPE = 1, esperar
 
-	ciclo_escritura_eeprom:
-		cpi r19, 12			; 6 letras * 2 bytes = 12
-		breq loop			; salta al loop principal cuando termina de escribir toda la palabra en EEPROM (cuando se encuentra un 0x00 en la tabla)
-		ldi ZL,low(tabla*2)
-		add ZL, r19			; r19 contiene el indice de la tabla
-		lpm r22, Z
+		ciclo_escritura_eeprom:
+			cpi r19, 12			; 6 letras * 2 bytes = 12
+			breq loop			; salta al loop principal cuando termina de escribir toda la palabra en EEPROM (cuando se encuentra un 0x00 en la tabla)
+			ldi ZL,low(tabla*2)
+			add ZL, r19			; r19 contiene el indice de la tabla
+			lpm r22, Z
 
-		; Cargar dirección de EEPROM
-		out EEARL, r17
-		out EEARH, r18
+			; Cargar dirección de EEPROM
+			out EEARL, r17
+			out EEARH, r18
 
-		; se carga en la EEPROM el patrón de la letra para el 14segmentos
-		out EEDR, r22
-		sbi EECR, EEMPE		; Habilita escritura
-		sbi EECR, EEPE      ; Inicia escritura
+			; se carga en la EEPROM el patrón de la letra para el 14segmentos
+			out EEDR, r22
+			sbi EECR, EEMPE		; Habilita escritura
+			sbi EECR, EEPE      ; Inicia escritura
 
-		inc r17		; pasa a la siguiente posicion de memoria EEPROM
-		inc r19		; pasa al siguiente índice de la tabla
-		rjmp escribir_eeprom
+			inc r17		; pasa a la siguiente posicion de memoria EEPROM
+			inc r19		; pasa al siguiente índice de la tabla
+			rjmp escribir_eeprom
 
 loop:
 	; primer byte (PORTF)
