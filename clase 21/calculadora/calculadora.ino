@@ -42,24 +42,21 @@ float resultado = 0;
 
 // ================== SETUP ==================
 void setup() {
-  // Configurar filas como salida
   for (int i = 0; i < 4; i++) {
     pinMode(filas[i], OUTPUT);
     digitalWrite(filas[i], HIGH);
   }
-  // Configurar interrupciones
   PCICR |= (1 << PCIE2);
   PCMSK2 |= 0x0F;
   sei();
-  // Configurar columnas como entrada
   for (int i = 0; i < 4; i++) {
     pinMode(columnas[i], INPUT_PULLUP);
   }
-  // Configurar pines LCD como salida
   for (int i = 0; i < 10; i++) {
     pinMode(pines[i], OUTPUT);
   }
   delay(20);
+
   lcdComando(0x38); delayMicroseconds(50);
   lcdComando(0x06); delayMicroseconds(50);
   lcdComando(0x0F); delayMicroseconds(50);
@@ -90,8 +87,6 @@ void loop() {
       char tecla = tablateclado[teclaPresionada];
       procesarTecla(tecla);
       teclaDetectada = false;
-
-      // Debounce: esperar a que se suelte la tecla
       while (digitalRead(columnas[col]) == LOW);
       delay(150);
     }
@@ -131,7 +126,6 @@ void enviarByte(byte valor) {
   delayMicroseconds(50);
 }
 
-// Vincular interrupción real con función
 ISR(PCINT2_vect) { detectarTecla(); }
 
 // ================== FUNCIONES DE LA CALCULADORA ==================
@@ -140,7 +134,6 @@ void limpiarEntrada() {
   largo = 0;
 }
 
-// Procesa la tecla presionada
 void procesarTecla(char tecla) {
   if (tecla == 'C') {
     lcdComando(0x01);
@@ -153,17 +146,13 @@ void procesarTecla(char tecla) {
       mostrarResultado = true;
       resultado = calcular(entrada);
       lcdComando(0x01);
+      delay(2); // Important delay for LCD after clear
+      lcdComando(0x80); // Position cursor to first cell
       if (resultado != -999999) {
         char resultadoStr[18];
-        floatToString(resultado, resultadoStr, 4);
-        lcdComando(0x01);    // Limpiar pantalla
-        delay(2);            // Espera para evitar perder el primer dígito
-        lcdComando(0x80);    // Opcional, asegura el cursor al inicio
-        mostrarSinEspacios(resultadoStr); // Imprime el resultado
+        dtostrf(resultado, 0, 4, resultadoStr);
+        mostrarSinEspacios(resultadoStr);
       } else {
-        lcdComando(0x01);
-        delay(2);
-        lcdComando(0x80);
         lcdTexto("Error!");
       }
       limpiarEntrada();
@@ -179,46 +168,15 @@ void procesarTecla(char tecla) {
   }
 }
 
-// Elimina espacios iniciales antes de mostrar en el LCD
 void mostrarSinEspacios(char* texto) {
   while (*texto == ' ') texto++;
   lcdTexto(texto);
 }
 
-// Conversión flotante a string (sin librerías)
-void floatToString(float num, char *str, int decimals) {
-  char temp[18];
-  long int_part = (long)num;
-  float decimal = fabs(num - int_part);
-
-  if (num < 0) {
-    *str++ = '-';
-    int_part = -int_part;
-  }
-  ltoa(int_part, temp, 10); // parte entera
-  strcpy(str, temp);
-  str += strlen(temp);
-
-  if (decimals > 0) {
-    *str++ = '.';
-    for (int i = 0; i < decimals; i++) {
-      decimal *= 10;
-      int d = (int)decimal;
-      *str++ = '0' + d;
-      decimal -= d;
-    }
-  }
-  *str = 0;
-}
-
-// Calcula el resultado de la cadena de entrada
 float calcular(char* expr) {
-  // Permite solo [0-9]+op[0-9]+
   char numA[9] = {0}, numB[9] = {0};
   char operador = 0;
   int i = 0, j = 0;
-
-  // Primer número
   while (expr[i] && isDigit(expr[i])) {
     numA[j++] = expr[i++];
   }
@@ -234,7 +192,6 @@ float calcular(char* expr) {
   if (numA[0] == 0 || numB[0] == 0) return -999999;
   long a = atol(numA);
   long b = atol(numB);
-
   switch (operador) {
     case '+': return (float)(a + b);
     case '-': return (float)(a - b);
