@@ -39,6 +39,7 @@ char entrada[17]; // Cadena de entrada
 int largo = 0;
 bool mostrarResultado = false;
 float resultado = 0;
+bool hayResultado = false; // Nuevo: indica si hay un resultado previo
 
 // ================== SETUP ==================
 void setup() {
@@ -138,27 +139,55 @@ void procesarTecla(char tecla) {
   if (tecla == 'C') {
     lcdComando(0x01);
     limpiarEntrada();
+    hayResultado = false; // limpiar resultado previo
     return;
   }
+
+  // Si hay un resultado previo y el usuario presiona un operador:
+  if (hayResultado && (tecla == '+' || tecla == '-' || tecla == '*' || tecla == '/')) {
+    limpiarEntrada();
+    char resultadoStr[18];
+    dtostrf(resultado, 0, 4, resultadoStr);
+    strcpy(entrada, resultadoStr); // Copia el resultado como valor inicial en la expresión
+    largo = strlen(entrada);
+    // Quitar espacios iniciales por dtostrf:
+    int offset = 0;
+    while (entrada[offset] == ' ') offset++;
+    if (offset > 0) {
+      for (int i = 0; i <= largo - offset; i++) entrada[i] = entrada[i + offset];
+      largo -= offset;
+    }
+    // Añadir el operador digitado
+    if (largo < 16) {
+      entrada[largo++] = tecla;
+      entrada[largo] = '\0';
+      lcdComando(0x01); delay(2); lcdComando(0x80);
+      lcdTexto(entrada);
+    }
+    hayResultado = false; // Ya no hay resultado a reutilizar, viene una nueva operación
+    return;
+  }
+
   if (!mostrarResultado) {
     if (tecla == '=') {
       entrada[largo] = 0;
       mostrarResultado = true;
       resultado = calcular(entrada);
       lcdComando(0x01);
-      delay(2); // Important delay for LCD after clear
-      lcdComando(0x80); // Position cursor to first cell
+      delay(2); // Espera tras clear LCD
+      lcdComando(0x80);
       if (resultado != -999999) {
         char resultadoStr[18];
         dtostrf(resultado, 0, 4, resultadoStr);
         mostrarSinEspacios(resultadoStr);
+        hayResultado = true; // Se puede usar este resultado para la siguiente operación
       } else {
         lcdTexto("Error!");
+        hayResultado = false;
       }
       limpiarEntrada();
-      delay(3000);
-      lcdComando(0x01);
       mostrarResultado = false;
+      // ¡No limpiar el LCD ni el resultado! El resultado debe quedar
     } else {
       if (largo < 16) {
         entrada[largo++] = tecla;
@@ -168,15 +197,21 @@ void procesarTecla(char tecla) {
   }
 }
 
+// Elimina espacios iniciales antes de mostrar en el LCD
 void mostrarSinEspacios(char* texto) {
   while (*texto == ' ') texto++;
   lcdTexto(texto);
 }
 
 float calcular(char* expr) {
-  char numA[9] = {0}, numB[9] = {0};
+  char numA[17] = {0}, numB[17] = {0};
   char operador = 0;
   int i = 0, j = 0;
+
+  // Permitir signo en el primer número
+  if(expr[i] == '-') {
+    numA[j++] = expr[i++];
+  }
   while (expr[i] && isDigit(expr[i])) {
     numA[j++] = expr[i++];
   }
@@ -192,6 +227,7 @@ float calcular(char* expr) {
   if (numA[0] == 0 || numB[0] == 0) return -999999;
   long a = atol(numA);
   long b = atol(numB);
+
   switch (operador) {
     case '+': return (float)(a + b);
     case '-': return (float)(a - b);
@@ -202,5 +238,5 @@ float calcular(char* expr) {
 }
 
 bool isDigit(char c) {
-  return (c >= '0' && c <= '9');
+  return (c >= '0' && c <= '9') || c == '.';
 }
