@@ -39,36 +39,50 @@ char entrada[17]; // Cadena de entrada
 int largo = 0;
 bool mostrarResultado = false;
 float resultado = 0;
-bool hayResultado = false; // Nuevo: indica si hay un resultado previo
+bool hayResultado = false; // indica si hay un resultado previo
 
 // ================== SETUP ==================
 void setup() {
+
+  // ***** CONFIGURACION DEL TECLADO *****
+  // *************************************
+
+  // filas como salida
   for (int i = 0; i < 4; i++) {
     pinMode(filas[i], OUTPUT);
     digitalWrite(filas[i], HIGH);
   }
-  PCICR |= (1 << PCIE2);
-  PCMSK2 |= 0x0F;
-  sei();
+  // columnas como entrada con pull-up
   for (int i = 0; i < 4; i++) {
     pinMode(columnas[i], INPUT_PULLUP);
   }
+  // interrupcion por grupo para las columnas del teclado
+  PCICR |= (1 << PCIE2);
+  PCMSK2 |= 0x0F;
+  sei();
+
+  // ***** CONFIGURACION DEL LCD *****
+  // *************************************
+
   for (int i = 0; i < 10; i++) {
     pinMode(pines[i], OUTPUT);
   }
   delay(20);
 
-  lcdComando(0x38); delayMicroseconds(50);
-  lcdComando(0x06); delayMicroseconds(50);
-  lcdComando(0x0F); delayMicroseconds(50);
-  lcdComando(0x14); delayMicroseconds(50);
-  lcdComando(0x01); delay(2);
+  lcdComando(0x38); delayMicroseconds(50); // 0011 1000 - DL 1: 8 bits, N 1: 2 líneas
+  lcdComando(0x06); delayMicroseconds(50); // 0000 0110 - I/D 1: incremento S 0: mensaje estático
+  lcdComando(0x0F); delayMicroseconds(50); // 0000 1111 - Display ON, activar cursos, parpadear caracter señalado
+  lcdComando(0x14); delayMicroseconds(50); // 0001 0100 - RL 1: Desplazamiento a la derecha
+  lcdComando(0x01); delay(2);              // 0000 0001 - Clear display
 
   limpiarEntrada();
 }
 
 // ================== LOOP ==================
 void loop() {
+  // ***** FUNCIONAMIENTO TECLADO *****
+  // **********************************
+  // Barrido de filas
   static int filaActiva = 0;
   for (int i = 0; i < 4; i++) digitalWrite(filas[i], HIGH);
   digitalWrite(filas[filaActiva], LOW);
@@ -83,19 +97,17 @@ void loop() {
     for (int i = 0; i < 4; i++) {
       if (digitalRead(filas[i]) == LOW) fila = i;
     }
+    // mostrar tecla presionada en el display
     if (fila >= 0 && col >= 0) {
-      teclaPresionada = fila * 4 + col;
+      teclaPresionada = fila * 4 + col; // numero del 0 al 15
       char tecla = tablateclado[teclaPresionada];
-      procesarTecla(tecla);
+      procesarTecla(tecla); // aqui esta la magia
       teclaDetectada = false;
       while (digitalRead(columnas[col]) == LOW);
       delay(150);
     }
   }
 }
-
-// ================== FUNCIONES TECLADO ==================
-void detectarTecla() { teclaDetectada = true; }
 
 // ================== FUNCIONES LCD ==================
 void lcdComando(byte cmd) {
@@ -127,13 +139,12 @@ void enviarByte(byte valor) {
   delayMicroseconds(50);
 }
 
-ISR(PCINT2_vect) { detectarTecla(); }
-
-// ================== FUNCIONES DE LA CALCULADORA ==================
 void limpiarEntrada() {
   memset(entrada, 0, sizeof(entrada));
   largo = 0;
 }
+
+// ================== FUNCIONES DE LA CALCULADORA ==================
 
 void procesarTecla(char tecla) {
   if (tecla == 'C') {
@@ -187,7 +198,7 @@ void procesarTecla(char tecla) {
       }
       limpiarEntrada();
       mostrarResultado = false;
-      // ¡No limpiar el LCD ni el resultado! El resultado debe quedar
+
     } else {
       if (largo < 16) {
         entrada[largo++] = tecla;
@@ -239,4 +250,12 @@ float calcular(char* expr) {
 
 bool isDigit(char c) {
   return (c >= '0' && c <= '9') || c == '.';
+}
+
+
+// ================== INTERRUPCIONES ==================
+
+// Interrupción del teclado para deteccion
+ISR(PCINT2_vect) { 
+  teclaDetectada = true;
 }

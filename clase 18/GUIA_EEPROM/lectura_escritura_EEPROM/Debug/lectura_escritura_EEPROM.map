@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Parciales\practica\lectura_escritura_EEPROM\lectura_escritura_EEPROM\main.asm Wed Oct 15 11:10:22 2025
+AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 18\GUIA_EEPROM\lectura_escritura_EEPROM\main.asm Mon Nov 17 17:12:29 2025
 
 
 EQU  SIGNATURE_000 0000001e

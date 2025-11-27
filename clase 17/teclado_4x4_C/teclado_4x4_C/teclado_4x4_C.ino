@@ -6,7 +6,7 @@ const uint8_t filas[4] = {53, 52, 51, 50}; // PB0–PB3 en el Mega
 const uint8_t columnas[4] = {A8, A9, A10, A11}; // PK0–PK3
 
 // Display 7 segmentos → Salidas (ánodo común)
-const uint8_t displayPins[8] = {A0, A1, A2, A3, A4, A5, A6, A7};
+const uint8_t displayPins[8] = {A0, A1, A2, A3, A4, A5, A6};
 
 // Tabla de segmentos (ánodo común)
 const byte tabla7seg[16] = {
@@ -17,11 +17,6 @@ volatile int teclaPresionada = -1; // Valor 0–15
 volatile bool teclaDetectada = false;
 
 // ================== FUNCIONES ==================
-
-// Interrupción de cambio de pin (para las columnas)
-void detectarTecla() {
-  teclaDetectada = true;
-}
 
 // Mostrar número en display
 void mostrarEnDisplay(byte valor) {
@@ -91,7 +86,7 @@ void loop() {
   }
 }
 
-// Vincular interrupción real con función
+// Interrupción de cambio de pin (para las columnas)
 ISR(PCINT2_vect) {
-  detectarTecla();
+  teclaDetectada = true;
 }

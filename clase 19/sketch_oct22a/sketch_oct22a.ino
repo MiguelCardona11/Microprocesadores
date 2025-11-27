@@ -23,21 +23,21 @@ void setup() {
     pinMode(pines[i], OUTPUT);
   }
 
-  delay(20); // Espera inicial (>15 ms)
+  delay(5); // Espera inicial (>15 ms)
 
   // --- RUTINA DE INICIALIZACIÓN ---
   // lcdComando solo tiene en cuenta los D0-D7
   lcdComando(0x38);       // 0011 1000  DL 1: 8 bits, N 1: 2 líneas
-  delayMicroseconds(50);
+  delay(5);
 
   lcdComando(0x0C);       // 0000 1100 Display ON, cursor OFF, parpadeo OFF
-  delayMicroseconds(50);  
+  delay(5);  
 
   lcdComando(0x06);       // 0000 0110   I/D 1: incremento S 0: mensaje estático
-  delayMicroseconds(50);
+  delay(5);
 
   lcdComando(0x01); // Clear display
-  delay(2);         // Tiempo típico 1.64 ms
+  delay(5);         // Tiempo típico 1.64 ms
   // ---------------------------------
   // --- ESCRIBIR MENSAJE ---
   lcdTexto("HOLA");
@@ -67,7 +67,7 @@ void lcdTexto(const char *texto) {
   // mientras el caracter apuntado no sea el fin de la cadena
   while (*texto) {
     lcdDato(*texto++);
-    delayMicroseconds(50);
+    delay(5);
   }
 }
 
@@ -85,8 +85,8 @@ void enviarByte(byte valor) {
 
   // Generar pulso de habilitación
   digitalWrite(E, HIGH);
-  delayMicroseconds(1); // Duración mínima del pulso (~450 ns)
+  delay(1); // Duración mínima del pulso (~450 ns)
   digitalWrite(E, LOW);
 
-  delayMicroseconds(50); // Tiempo para que LCD procese el comando
+  delay(5); // Tiempo para que LCD procese el comando
 }

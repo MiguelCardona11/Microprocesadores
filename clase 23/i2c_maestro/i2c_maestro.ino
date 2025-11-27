@@ -6,10 +6,10 @@
 const uint8_t filas[4] = {53, 52, 51, 50};
 const uint8_t columnas[4] = {A8, A9, A10, A11};
 const char tablateclado[16] = {
-  '7', '8', '9', '/',
-  '4', '5', '6', '*',
-  '1', '2', '3', '-',
-  'C', '0', '=', '+'
+  '1', '2', '3', 'A',
+  '4', '5', '6', 'B',
+  '7', '8', '9', 'C',
+  '*', '0', '#', 'D'
 };
 
 volatile int teclaPresionada = -1;

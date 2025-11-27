@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Parciales\practica\lectura_escritura_EEPROM\lectura_escritura_EEPROM\main.asm Wed Oct 15 11:10:22 2025
+AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Simulaciones\clase 18\GUIA_EEPROM\lectura_escritura_EEPROM\main.asm Mon Nov 17 17:12:29 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m2560def.inc'
@@ -1850,6 +1850,7 @@ AVRASM ver. 2.2.8  C:\Users\ASUS\Desktop\Universidad\2025-2\Microprocesadores\Pa
                                  ;==============================
                                  ; Escritura en EEPROM (ATmega2560)
                                  ;==============================
+                                 
                                  
                                  ; Esperar a que finalice una escritura previa
                                  WaitEE:
