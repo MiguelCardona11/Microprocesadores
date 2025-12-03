@@ -1,15 +1,17 @@
 #include <LiquidCrystal.h>
 
-// Asocia los pines de acuerdo a tu conexión: LiquidCrystal(rs, en, d4, d5, d6, d7);
-// Modo 4 bits (usa solo D4–D7)
-#define RS 12
-#define E  11
-#define D4 5
-#define D5 4
-#define D6 3
-#define D7 2
+#define RS 13
+#define E 12
+#define D0 11
+#define D1 10
+#define D2 9
+#define D3 8
+#define D4 7
+#define D5 6
+#define D6 5
+#define D7 4
 
-LiquidCrystal lcd(RS, E, D4, D5, D6, D7);
+LiquidCrystal lcd(RS, E, D0, D1, D2, D3, D4, D5, D6, D7);
 
 void setup() {
   // Inicializa LCD 16 columnas, 2 filas
@@ -22,5 +24,5 @@ void setup() {
 }
 
 void loop() {
-  // Pantalla estática, sin código adicional
+  //
 }

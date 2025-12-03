@@ -1,13 +1,23 @@
 #include <LiquidCrystal.h>
+#include <SPI.h>
+#include <MFRC522.h>
 
-// ******* TECLADO *******
+// ******** RFID *********
+#define RST_PIN 22    // Pin reset RFID
+#define SS_PIN 53     // Pin SDA (SS) RFID
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+MFRC522::MIFARE_Key key;
+byte block = 4;
+
+// ******** TECLADO *********
 const uint8_t FILAS[4] = {A0, A1, A2, A3};
 const uint8_t COLUMNAS[4] = {A8, A9, A10, A11};
 
 volatile int teclaPresionada = -1;
 volatile bool teclaDetectada = false;
 
-// ******* LCD *******
+// ******** LCD *********
 bool actualizarPantalla = true;
 #define LCD_ANCHO 16
 
@@ -18,12 +28,11 @@ int opcionPedidoSeleccionada = -1;
 int itemSeleccionado = -1;
 String cantidadBuffer = "";
 int mesaSeleccionada = -1;
-bool esperandoConfirmacion = false;
 
-// MESAS[15][4][3] -> 15 MESAS, 4 CATEGORIAS, 3 PRODUCTOS POR CATEGORIA
 int mesas[15][4][3];
+int comandas[15][4][3];
+int ultimoAgregado[15][4][3];
 
-// NOMBRES DE PRODUCTOS MAYUSCULAS
 const char* nombresEntradas[3] = {"EMPANADAS", "AREPAS", "PATACONES"};
 const char* nombresPlatos[3] = {"BANDEJA PAISA", "AJIACO", "SANCOCHO"};
 const char* nombresBebidas[3] = {"LIMONADA", "AGUAPANELA", "GASEOSA"};
@@ -38,9 +47,9 @@ const char** nombresCategorias[4] = {nombresEntradas, nombresPlatos, nombresBebi
 const unsigned long* preciosCategorias[4] = {preciosEntradas, preciosPlatos, preciosBebidas, preciosPostres};
 
 const char tablateclado[16] = {
-  '7', '8', '9', '/',
+  '1', '2', '3', '/',
   '4', '5', '6', '*',
-  '1', '2', '3', '-',
+  '7', '8', '9', '-',
   'C', '0', '=', '+'
 };
 
@@ -55,9 +64,42 @@ const char tablateclado[16] = {
 #define D6 5
 #define D7 4
 
+#define PIN_BOTON_COCINA 3
+#define PIN_BOTON_SIGUIENTE_MESA 2
+
 LiquidCrystal lcd(RS, E, D0, D1, D2, D3, D4, D5, D6, D7);
 
+// ******** DISPLAYS 7-SEGMENTOS MANUAL *********
+#define SEG_A 30
+#define SEG_B 31
+#define SEG_C 32
+#define SEG_D 33
+#define SEG_E 34
+#define SEG_F 35
+#define SEG_G 36
+
+#define DIG1 37
+#define DIG2 38
+
+const uint8_t segment_map[10] = {
+  0b00000001, 0b01001111, 0b00010010, 0b00000110, 0b01001100,
+  0b00100100, 0b00100000, 0b00001111, 0b00000000, 0b00000100
+};
+
+// MODO COCINA GLOBAL
+volatile bool modoCocina = false;
+volatile bool cambioModo = false;
+volatile bool cambioMesaFlag = false;
+
+// VARIABLES DE COCINA
+int modoCocinaSubmodo = -1;
+int mesaCocinaActual = 0;
+
+// VARIABLES RFID
+unsigned long totalAPagar = 0;
+
 void setup() {
+  // Configurar teclado
   for (int i = 0; i < 4; i++) {
     pinMode(FILAS[i], OUTPUT);
     digitalWrite(FILAS[i], HIGH);
@@ -68,16 +110,156 @@ void setup() {
   PCICR |= 0x04;
   PCMSK2 |= 0x0F;
   sei();
+
+  // Inicializar LCD
   lcd.begin(LCD_ANCHO, 2);
   lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("INICIANDO...");
 
+  // Inicializar mesas
   for (int mesa = 0; mesa < 15; mesa++)
     for (int cat = 0; cat < 4; cat++)
-      for (int prod = 0; prod < 3; prod++)
+      for (int prod = 0; prod < 3; prod++) {
         mesas[mesa][cat][prod] = 0;
+        comandas[mesa][cat][prod] = 0;
+        ultimoAgregado[mesa][cat][prod] = 0;
+      }
+
+  // Configurar botones
+  pinMode(PIN_BOTON_COCINA, INPUT_PULLUP);
+  EIMSK |= (1 << INT1);
+  EICRA |= (1 << ISC11);
+  EICRA &= ~(1 << ISC10);
+
+  pinMode(PIN_BOTON_SIGUIENTE_MESA, INPUT_PULLUP);
+  EIMSK |= (1 << INT0);
+  EICRA |= (1 << ISC01);
+  EICRA &= ~(1 << ISC00);
+
+  // Configurar displays 7-segmentos
+  pinMode(SEG_A, OUTPUT);
+  pinMode(SEG_B, OUTPUT);
+  pinMode(SEG_C, OUTPUT);
+  pinMode(SEG_D, OUTPUT);
+  pinMode(SEG_E, OUTPUT);
+  pinMode(SEG_F, OUTPUT);
+  pinMode(SEG_G, OUTPUT);
+  pinMode(DIG1, OUTPUT);
+  pinMode(DIG2, OUTPUT);
+  
+  apagarDisplays();
+
+  // Inicializar RFID - MEJORADO
+  SPI.begin();
+  delay(50);
+  
+  pinMode(RST_PIN, OUTPUT);
+  digitalWrite(RST_PIN, HIGH);
+  delay(50);
+  
+  mfrc522.PCD_Init();
+  delay(50);
+  
+  // Verificar comunicación con el módulo
+  byte version = mfrc522.PCD_ReadRegister(mfrc522.VersionReg);
+  
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  if (version == 0x00 || version == 0xFF) {
+    lcd.print("RFID NO DETECT");
+    lcd.setCursor(0, 1);
+    lcd.print("VER CONEXIONES");
+    delay(2000);
+  } else {
+    lcd.print("RFID OK v0x");
+    lcd.print(version, HEX);
+    delay(1000);
+  }
+  
+  for (byte i = 0; i < 6; i++) {
+    key.keyByte[i] = 0xFF;
+  }
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("SISTEMA LISTO");
+  delay(1000);
+  lcd.clear();
 }
 
 void loop() {
+  if (modoCocina) {
+    mostrarCocina();
+  } else {
+    mostrarMesero();
+  }
+}
+
+// ISR para botón de siguiente mesa (INT0, pin 2)
+ISR(INT0_vect) {
+  cambioMesaFlag = true;
+}
+
+// ISR TECLADO
+ISR(PCINT2_vect) {
+  teclaDetectada = true;
+}
+
+// ISR COCINA
+ISR(INT1_vect) {
+  modoCocina = !modoCocina;
+  cambioModo = true;
+}
+
+void mostrarNumeroDisplay(int numero) {
+  if (numero < 0 || numero > 14) numero = 0;
+  
+  int decenas = numero / 10;
+  int unidades = numero % 10;
+  
+  escribirSegmentos(segment_map[decenas]);
+  digitalWrite(DIG1, LOW);
+  digitalWrite(DIG2, HIGH);
+  delay(5);
+  
+  escribirSegmentos(segment_map[unidades]);
+  digitalWrite(DIG1, HIGH);
+  digitalWrite(DIG2, LOW);
+  delay(5);
+}
+
+void escribirSegmentos(uint8_t patron) {
+  digitalWrite(SEG_A, (patron >> 6) & 0x01);
+  digitalWrite(SEG_B, (patron >> 5) & 0x01);
+  digitalWrite(SEG_C, (patron >> 4) & 0x01);
+  digitalWrite(SEG_D, (patron >> 3) & 0x01);
+  digitalWrite(SEG_E, (patron >> 2) & 0x01);
+  digitalWrite(SEG_F, (patron >> 1) & 0x01);
+  digitalWrite(SEG_G, (patron >> 0) & 0x01);
+}
+
+void apagarDisplays() {
+  digitalWrite(DIG1, HIGH);
+  digitalWrite(DIG2, HIGH);
+}
+
+// ========== FUNCION PARA MESERO ==========
+void mostrarMesero() {
+  apagarDisplays();
+  
+  if (cambioModo) {
+    lcd.clear();
+    modo = -1;
+    submodo = -1;
+    mensajeScrollActual = "";
+    itemSeleccionado = -1;
+    cantidadBuffer = "";
+    mesaSeleccionada = -1;
+    actualizarPantalla = true;
+    cambioModo = false;
+  }
+
   if (actualizarPantalla) {
     lcd.clear();
     if (modo == -1) {
@@ -95,12 +277,14 @@ void loop() {
     }
     actualizarPantalla = false;
   }
+  
   if (mensajeScrollActual != "") {
     String temp = mensajeScrollActual;
     temp += "   ";
     temp.toUpperCase();
-    mensajeScroll(temp.c_str(), 1, 100);
+    mensajeScroll(temp.c_str(), 1, 500);
   }
+  
   static int filaActiva = 0;
   for (int i = 0; i < 4; i++) digitalWrite(FILAS[i], HIGH);
   digitalWrite(FILAS[filaActiva], LOW);
@@ -114,7 +298,7 @@ void loop() {
     if (fila >= 0 && col >= 0) {
       teclaPresionada = fila * 4 + col;
       char tecla = tablateclado[teclaPresionada];
-      procesarTecla(tecla);
+      procesarTeclaMesero(tecla);
       teclaDetectada = false;
       while (digitalRead(COLUMNAS[col]) == LOW);
       delay(150);
@@ -122,7 +306,68 @@ void loop() {
   }
 }
 
-void procesarTecla(char tecla) {
+// ========== FUNCION PARA COCINA ==========
+void mostrarCocina() {
+  if (cambioModo) {
+    lcd.clear();
+    modoCocinaSubmodo = -1;
+    mesaCocinaActual = 0;
+    mensajeScrollActual = "";
+    cambioModo = false;
+    cambioMesaFlag = false;
+  }
+
+  if (modoCocinaSubmodo == -1) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("COCINA");
+    lcd.setCursor(0, 1);
+    lcd.print("0.VER PEDIDOS");
+    mensajeScrollActual = "";
+    modoCocinaSubmodo = 0;
+    apagarDisplays();
+    return;
+  }
+
+  mostrarNumeroDisplay(mesaCocinaActual);
+
+  if (cambioMesaFlag && modoCocinaSubmodo == 10) {
+    mesaCocinaActual = (mesaCocinaActual + 1) % 15;
+    mostrarComandaCocina(mesaCocinaActual);
+    cambioMesaFlag = false;
+    delay(200);
+  }
+
+  if (mensajeScrollActual != "") {
+    String temp = mensajeScrollActual;
+    temp += "   ";
+    temp.toUpperCase();
+    mensajeScroll(temp.c_str(), 1, 500);
+  }
+
+  static int filaActiva = 0;
+  for (int i = 0; i < 4; i++) digitalWrite(FILAS[i], HIGH);
+  digitalWrite(FILAS[filaActiva], LOW);
+  filaActiva = (filaActiva + 1) % 4;
+
+  if (teclaDetectada) {
+    int col = -1;
+    for (int i = 0; i < 4; i++) if (digitalRead(COLUMNAS[i]) == LOW) col = i;
+    int fila = -1;
+    for (int i = 0; i < 4; i++) if (digitalRead(FILAS[i]) == LOW) fila = i;
+    if (fila >= 0 && col >= 0) {
+      teclaPresionada = fila * 4 + col;
+      char tecla = tablateclado[teclaPresionada];
+      procesarTeclaCocina(tecla);
+      teclaDetectada = false;
+      while (digitalRead(COLUMNAS[col]) == LOW);
+      delay(150);
+    }
+  }
+}
+
+// ========== PROCESAMIENTO DE TECLAS MESERO ==========
+void procesarTeclaMesero(char tecla) {
   if (tecla == 'C') {
     lcd.clear();
     modo = -1; submodo = -1;
@@ -139,21 +384,58 @@ void procesarTecla(char tecla) {
       mesaSeleccionada = -1;
       cantidadBuffer = "";
       mensajeScrollActual = "";
-      if (modo == 0) { submodo = 0; lcd.clear(); lcd.setCursor(0,0); lcd.print("MESA (0-14):"); actualizarPantalla = false;}
-      else if (modo == 1) { submodo = 1; lcd.clear(); lcd.setCursor(0,0); lcd.print("RECARGAR"); lcd.setCursor(0,1); lcd.print("INGRESE MONTO:"); actualizarPantalla = true;}
-      else if (modo == 2) { submodo = 2; lcd.clear(); lcd.setCursor(0,0); lcd.print("MESA (0-14):"); actualizarPantalla = false; }
-      else if (modo == 3) { submodo = 3; lcd.clear(); lcd.setCursor(0,0); lcd.print("MESA (0-14):"); actualizarPantalla = false; }
+      if (modo == 0) { 
+        submodo = 0; 
+        lcd.clear(); 
+        lcd.setCursor(0,0); 
+        lcd.print("MESA (0-14):"); 
+        actualizarPantalla = false;
+      }
+      else if (modo == 1) { 
+        submodo = 1; 
+        lcd.clear(); 
+        lcd.setCursor(0,0); 
+        lcd.print("RECARGAR"); 
+        lcd.setCursor(0,1); 
+        lcd.print("INGRESE MONTO:"); 
+        actualizarPantalla = true;
+      }
+      else if (modo == 2) { 
+        submodo = 2; 
+        lcd.clear(); 
+        lcd.setCursor(0,0); 
+        lcd.print("MESA (0-14):"); 
+        actualizarPantalla = false; 
+      }
+      else if (modo == 3) { 
+        submodo = 3; 
+        lcd.clear(); 
+        lcd.setCursor(0,0); 
+        lcd.print("MESA (0-14):"); 
+        actualizarPantalla = false; 
+      }
     }
   } else if ((modo == 0 || modo == 2 || modo == 3) && mesaSeleccionada == -1) {
     if (tecla >= '0' && tecla <= '9') {
-      if (cantidadBuffer.length() < 2) { cantidadBuffer += tecla; lcd.setCursor(12,0); lcd.print(cantidadBuffer); }
+      if (cantidadBuffer.length() < 2) { 
+        cantidadBuffer += tecla; 
+        lcd.setCursor(12,0); 
+        lcd.print(cantidadBuffer); 
+      }
     } else if (tecla == '=') {
       int val = cantidadBuffer.toInt();
       if (val >=0 && val < 15) {
         mesaSeleccionada = val;
         cantidadBuffer = "";
         if (modo == 0) {
-          submodo = 0; lcd.clear(); lcd.setCursor(0,0); lcd.print("MESA "); lcd.print(mesaSeleccionada); lcd.setCursor(0,1); lcd.print("OPCIONES"); delay(100);
+          submodo = 0; 
+          lcd.clear(); 
+          lcd.setCursor(0,0); 
+          lcd.print("MESA "); 
+          lcd.print(mesaSeleccionada); 
+          lcd.setCursor(0,1); 
+          lcd.print("OPCIONES"); 
+          delay(100);
           mensajeScrollActual = "0.ENTRADAS-1.PLATOS FUERTES-2.BEBIDAS-3.POSTRES";
         } else if (modo == 2) {
           submodo = 21;
@@ -163,71 +445,351 @@ void procesarTecla(char tecla) {
           mostrarResumenMesa(mesaSeleccionada, true);
         }
       } else {
-        lcd.clear(); lcd.setCursor(0,0); lcd.print("MESA (0-14):"); lcd.setCursor(0,1); lcd.print("NO VALIDA");
-        delay(1000); lcd.clear(); lcd.setCursor(0,0); lcd.print("MESA (0-14):");
+        lcd.clear(); 
+        lcd.setCursor(0,0); 
+        lcd.print("MESA (0-14):"); 
+        lcd.setCursor(0,1); 
+        lcd.print("NO VALIDA");
+        delay(1000); 
+        lcd.clear(); 
+        lcd.setCursor(0,0); 
+        lcd.print("MESA (0-14):");
         cantidadBuffer = "";
       }
     }
   } else {
-    procesarSubmodo(tecla);
+    procesarSubmodoMesero(tecla);
   }
 }
 
-void procesarSubmodo(char tecla) {
+void procesarSubmodoMesero(char tecla) {
   switch (submodo) {
     case 0: manejarOpcionesPedido(tecla); break;
     case 10: manejarSeleccionCategoria(tecla, 0, nombresEntradas); break;
     case 11: manejarSeleccionCategoria(tecla, 1, nombresPlatos); break;
     case 13: manejarSeleccionCategoria(tecla, 2, nombresBebidas); break;
     case 14: manejarSeleccionCategoria(tecla, 3, nombresPostres); break;
-    case 21:
-      if (!esperandoConfirmacion) {
-        // Primera vez que presiona '=' - mostrar confirmación
-        if (tecla == '=') {
-          esperandoConfirmacion = true;
-          mensajeScrollActual = ""; // Detener scroll
-          lcd.clear();
-          lcd.setCursor(0, 0);
-          lcd.print("CONFIRMAR");
-          lcd.setCursor(0, 1);
-          lcd.print("0. NO - 1. SI");
-        }
-      } else {
-        // Ya está esperando confirmación - procesar respuesta
-        if (tecla == '1') {
-          // Confirma el pago
-          limpiarMesa(mesaSeleccionada);
-          lcd.clear();
-          lcd.setCursor(0,0);
-          lcd.print("PAGO EXITOSO!");
-          lcd.setCursor(0,1);
-          lcd.print("MESA LIBERADA");
-          delay(1500);
-          modo = -1; submodo = -1; mesaSeleccionada = -1; 
-          mensajeScrollActual = ""; 
-          esperandoConfirmacion = false;
-          actualizarPantalla = true;
-        } else if (tecla == '0') {
-          // Cancela el pago
-          esperandoConfirmacion = false;
-          mostrarResumenMesa(mesaSeleccionada, false);
-        }
+    
+    case 21: // Resumen de pago mostrado
+      if (tecla == '=') {
+        submodo = 22;
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("CONFIRMAR?");
+        lcd.setCursor(0,1);
+        lcd.print("0.NO-1.SI");
+        mensajeScrollActual = "";
       }
       break;
+      
+    case 22: // Confirmación de pago
+      if (tecla == '0') {
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("PAGO CANCELADO");
+        delay(1500);
+        modo = -1; 
+        submodo = -1; 
+        mesaSeleccionada = -1;
+        mensajeScrollActual = ""; 
+        actualizarPantalla = true;
+      } else if (tecla == '1') {
+        submodo = 23;
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("ACERQUE LA");
+        lcd.setCursor(0,1);
+        lcd.print("TARJETA RFID");
+        mensajeScrollActual = "";
+      }
+      break;
+      
+    case 23: // Esperando tarjeta RFID
+      procesarPagoRFID();
+      break;
+      
     case 31:
       if (tecla == '=') {
-        modo = -1; submodo = -1; mesaSeleccionada = -1; mensajeScrollActual = ""; actualizarPantalla = true;
+        modo = -1; 
+        submodo = -1; 
+        mesaSeleccionada = -1; 
+        mensajeScrollActual = ""; 
+        actualizarPantalla = true;
       }
       break;
+      
     case 1:  break;
     case 2:  break;
     case 3:  break;
   }
 }
 
+// ========== PROCESAMIENTO DE TECLAS COCINA ==========
+void procesarTeclaCocina(char tecla) {
+  if (tecla == 'C') {
+    modoCocinaSubmodo = -1;
+    mesaCocinaActual = 0;
+    apagarDisplays();
+    return;
+  }
+
+  switch (modoCocinaSubmodo) {
+    case 0:
+      if (tecla == '0') {
+        modoCocinaSubmodo = 10;
+        mesaCocinaActual = 0;
+        mostrarComandaCocina(mesaCocinaActual);
+      }
+      break;
+    case 10:
+      if (tecla == '=') {
+        limpiarComanda(mesaCocinaActual);
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("MESA " + String(mesaCocinaActual));
+        lcd.setCursor(0, 1);
+        lcd.print("LISTO!");
+        delay(1000);
+        mesaCocinaActual = (mesaCocinaActual + 1) % 15;
+        mostrarComandaCocina(mesaCocinaActual);
+      }
+      break;
+  }
+}
+
+// ========== FUNCIONES RFID MEJORADAS ==========
+void procesarPagoRFID() {
+  static unsigned long ultimoIntentoLectura = 0;
+  
+  // Intentar lectura cada 500ms para no saturar
+  if (millis() - ultimoIntentoLectura < 500) {
+    return;
+  }
+  ultimoIntentoLectura = millis();
+  
+  // Reinicializar el módulo RFID
+  mfrc522.PCD_Init();
+  
+  // Buscar tarjeta
+  if (!mfrc522.PICC_IsNewCardPresent()) {
+    return;
+  }
+  
+  delay(50); // Pequeño delay para estabilidad
+  
+  // Seleccionar tarjeta
+  if (!mfrc522.PICC_ReadCardSerial()) {
+    return;
+  }
+  
+  // Tarjeta detectada - mostrar UID
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("TARJETA OK!");
+  lcd.setCursor(0,1);
+  lcd.print("UID:");
+  for (byte i = 0; i < 4; i++) {
+    if (mfrc522.uid.uidByte[i] < 0x10) lcd.print("0");
+    lcd.print(mfrc522.uid.uidByte[i], HEX);
+  }
+  delay(1500);
+  
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("PROCESANDO...");
+  delay(500);
+  
+  // Leer saldo actual
+  int saldoActual = leerSaldoRFID();
+  
+  if (saldoActual == -1) {
+    // Error de lectura
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("ERROR LECTURA");
+    lcd.setCursor(0,1);
+    lcd.print("REINTENTE");
+    delay(2000);
+    mfrc522.PICC_HaltA();
+    mfrc522.PCD_StopCrypto1();
+    submodo = 22; // Volver a confirmación
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("CONFIRMAR?");
+    lcd.setCursor(0,1);
+    lcd.print("0.NO-1.SI");
+    return;
+  }
+  
+  // Verificar saldo suficiente
+  if (saldoActual < (int)totalAPagar) {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("SALDO INSUF.");
+    lcd.setCursor(0,1);
+    lcd.print("$" + String(saldoActual));
+    delay(2500);
+    mfrc522.PICC_HaltA();
+    mfrc522.PCD_StopCrypto1();
+    submodo = 22;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("CONFIRMAR?");
+    lcd.setCursor(0,1);
+    lcd.print("0.NO-1.SI");
+    return;
+  }
+  
+  // Descontar del saldo
+  int nuevoSaldo = saldoActual - totalAPagar;
+  
+  if (escribirSaldoRFID(nuevoSaldo)) {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("PAGO EXITOSO!");
+    lcd.setCursor(0,1);
+    lcd.print("SALDO:$" + String(nuevoSaldo));
+    delay(2500);
+    
+    limpiarMesa(mesaSeleccionada);
+    
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("MESA LIBERADA");
+    delay(1500);
+  } else {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("ERROR ESCRITURA");
+    lcd.setCursor(0,1);
+    lcd.print("REINTENTE");
+    delay(2000);
+  }
+  
+  mfrc522.PICC_HaltA();
+  mfrc522.PCD_StopCrypto1();
+  
+  modo = -1; 
+  submodo = -1; 
+  mesaSeleccionada = -1;
+  mensajeScrollActual = ""; 
+  actualizarPantalla = true;
+}
+
+int leerSaldoRFID() {
+  byte buffer[18];
+  byte size = sizeof(buffer);
+  byte trailerBlock = 7;
+  
+  // Autenticar con el bloque
+  MFRC522::StatusCode status = mfrc522.PCD_Authenticate(
+    MFRC522::PICC_CMD_MF_AUTH_KEY_A, 
+    trailerBlock, 
+    &key, 
+    &(mfrc522.uid)
+  );
+  
+  if (status != MFRC522::STATUS_OK) {
+    return -1;
+  }
+  
+  delay(50); // Esperar después de autenticación
+  
+  // Leer el bloque 4 (donde está el saldo)
+  status = mfrc522.MIFARE_Read(block, buffer, &size);
+  
+  if (status != MFRC522::STATUS_OK) {
+    return -1;
+  }
+  
+  // Convertir bytes a número (Big Endian)
+  int saldo = ((long)buffer[0] << 24) | 
+              ((long)buffer[1] << 16) | 
+              ((long)buffer[2] << 8) | 
+              buffer[3];
+  
+  return saldo;
+}
+
+bool escribirSaldoRFID(int saldo) {
+  byte buffer[16];
+  byte trailerBlock = 7;
+  
+  // Limpiar buffer
+  memset(buffer, 0, 16);
+  
+  // Convertir saldo a bytes (Big Endian)
+  buffer[0] = (saldo >> 24) & 0xFF;
+  buffer[1] = (saldo >> 16) & 0xFF;
+  buffer[2] = (saldo >> 8) & 0xFF;
+  buffer[3] = saldo & 0xFF;
+  
+  // Autenticar
+  MFRC522::StatusCode status = mfrc522.PCD_Authenticate(
+    MFRC522::PICC_CMD_MF_AUTH_KEY_A, 
+    trailerBlock, 
+    &key, 
+    &(mfrc522.uid)
+  );
+  
+  if (status != MFRC522::STATUS_OK) {
+    return false;
+  }
+  
+  delay(50);
+  
+  // Escribir en el bloque 4
+  status = mfrc522.MIFARE_Write(block, buffer, 16);
+  
+  if (status != MFRC522::STATUS_OK) {
+    return false;
+  }
+  
+  return true;
+}
+
+// ========== FUNCIONES DE COCINA ==========
+void agregarAlComanda(int mesa, int categoria, int producto, int cantidad) {
+  comandas[mesa][categoria][producto] += cantidad;
+}
+
+void mostrarComandaCocina(int mesa) {
+  lcd.clear();
+  String resumen = "";
+  for (int cat = 0; cat < 4; cat++) {
+    for (int prod = 0; prod < 3; prod++) {
+      int cant = comandas[mesa][cat][prod];
+      if (cant > 0) {
+        if (resumen != "") resumen += " - ";
+        String nombreUpper = String(nombresCategorias[cat][prod]);
+        nombreUpper.toUpperCase();
+        resumen += nombreUpper + ":" + String(cant);
+      }
+    }
+  }
+  lcd.setCursor(0, 0);
+  lcd.print("MESA " + String(mesa));
+  lcd.setCursor(0, 1);
+  if(resumen == ""){
+    resumen+= "<SIN COMANDAS>  ";
+  }
+  mensajeScrollActual = resumen;
+}
+
+void limpiarComanda(int mesa) {
+  for (int cat = 0; cat < 4; cat++) {
+    for (int prod = 0; prod < 3; prod++) {
+      comandas[mesa][cat][prod] = 0;
+    }
+  }
+}
+
+// ========== FUNCIONES DEL MESERO ==========
 void manejarOpcionesPedido(char tecla) {
   if (tecla >= '0' && tecla <= '3') {
-    lcd.clear(); lcd.setCursor(0,0); mensajeScrollActual = "";
+    lcd.clear(); 
+    lcd.setCursor(0,0); 
+    mensajeScrollActual = "";
     switch (tecla) {
       case '0': lcd.print("ENTRADAS"); mensajeScrollActual = "0.EMPANADAS-1.AREPAS-2.PATACONES"; submodo = 10; break;
       case '1': lcd.print("PLATOS FUERTES"); mensajeScrollActual = "0.BANDEJA PAISA-1.AJIACO-2.SANCOCHO"; submodo = 11; break;
@@ -245,32 +807,48 @@ void manejarSeleccionCategoria(char tecla, int categoria, const char * nombres[3
       itemSeleccionado = tecla - '0';
       String nombre = nombres[itemSeleccionado];
       nombre.toUpperCase();
-      lcd.clear(); lcd.setCursor(0,0);
+      lcd.clear(); 
+      lcd.setCursor(0,0);
       lcd.print(nombre);
-      lcd.setCursor(0,1); lcd.print("CANTIDAD:"); cantidadBuffer = ""; mensajeScrollActual = "";
+      lcd.setCursor(0,1); 
+      lcd.print("CANTIDAD:"); 
+      cantidadBuffer = ""; 
+      mensajeScrollActual = "";
     }
   } else {
     if (tecla >= '0' && tecla <= '9') {
       cantidadBuffer += tecla;
-      lcd.setCursor(9,1); lcd.print(cantidadBuffer);
+      lcd.setCursor(9,1); 
+      lcd.print(cantidadBuffer);
     } else if (tecla == '=') {
       int cantidad = cantidadBuffer.toInt();
       if (cantidad > 0 &&
           mesaSeleccionada >= 0 && mesaSeleccionada < 15 &&
           itemSeleccionado >=0 && itemSeleccionado<3) {
         mesas[mesaSeleccionada][categoria][itemSeleccionado] += cantidad;
+        agregarAlComanda(mesaSeleccionada, categoria, itemSeleccionado, cantidad);
         String nombre = nombres[itemSeleccionado];
         nombre.toUpperCase();
-        lcd.clear(); lcd.setCursor(0,0); lcd.print("AGREGADO:");
+        lcd.clear(); 
+        lcd.setCursor(0,0); 
+        lcd.print("AGREGADO:");
         lcd.setCursor(0,1);
         lcd.print(String(mesas[mesaSeleccionada][categoria][itemSeleccionado]) + " " + nombre);
         delay(1500);
       } else {
-        lcd.clear(); lcd.setCursor(0,0); lcd.print("ERROR CANTIDAD");
+        lcd.clear(); 
+        lcd.setCursor(0,0); 
+        lcd.print("ERROR CANTIDAD");
         delay(1000);
       }
-      itemSeleccionado = -1; cantidadBuffer = ""; submodo = 0; opcionPedidoSeleccionada = -1;
-      mensajeScrollActual = "0.ENTRADAS-1.PLATOS FUERTES-2.BEBIDAS-3.POSTRES"; lcd.clear(); lcd.setCursor(0,0); lcd.print("OPCIONES");
+      itemSeleccionado = -1; 
+      cantidadBuffer = ""; 
+      submodo = 0; 
+      opcionPedidoSeleccionada = -1;
+      mensajeScrollActual = "0.ENTRADAS-1.PLATOS FUERTES-2.BEBIDAS-3.POSTRES"; 
+      lcd.clear(); 
+      lcd.setCursor(0,0); 
+      lcd.print("OPCIONES");
     }
   }
 }
@@ -294,9 +872,13 @@ void mostrarResumenMesa(int mesa, bool soloConsulta) {
   resumen +=">";
   if(resumen == "<>") resumen = "<--SIN PRODUCTOS-->";
   mensajeScrollActual = resumen;
-  String totalStr = "TOTAL: " + String(total);
+  String totalStr = "TOTAL: $" + String(total);
   totalStr.toUpperCase();
-  lcd.setCursor(0,0); lcd.print(totalStr);
+  lcd.setCursor(0,0); 
+  lcd.print(totalStr);
+  
+  // Guardar total para RFID
+  totalAPagar = total;
 }
 
 void limpiarMesa(int mesa) {
@@ -314,7 +896,9 @@ void mensajeScroll(const char* mensaje, uint8_t fila, unsigned long intervalo) {
   tempMsg.toUpperCase();
   const char* upMsg = tempMsg.c_str();
   if (mensajeAnterior != tempMsg) {
-    scrollIndex = 0; tiempoScroll = millis(); mensajeAnterior = tempMsg;
+    scrollIndex = 0; 
+    tiempoScroll = millis(); 
+    mensajeAnterior = tempMsg;
   }
   if (millis() - tiempoScroll >= intervalo) {
     tiempoScroll = millis();
@@ -324,11 +908,8 @@ void mensajeScroll(const char* mensaje, uint8_t fila, unsigned long intervalo) {
       buffer[i] = upMsg[idx];
     }
     buffer[LCD_ANCHO] = '\0';
-    lcd.setCursor(0, fila); lcd.print(buffer);
+    lcd.setCursor(0, fila); 
+    lcd.print(buffer);
     scrollIndex = (scrollIndex + 1) % lenScroll;
   }
-}
-
-ISR(PCINT2_vect) {
-  teclaDetectada = true;
 }
